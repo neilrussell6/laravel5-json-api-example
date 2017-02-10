@@ -2,11 +2,11 @@
 
 Laravel 5 JSON API implementation.
 
-response format:
+Response format:
 
 * [JSON API](http://jsonapi.org/format/)
 
-uses:
+Uses:
 
 * [Laravel 5](https://laravel.com/docs/5.3)
 * [Codeception](http://codeception.com/)
@@ -19,11 +19,11 @@ $ php artisan key:generate
 $ cp .env.example .env
 ```
 
-Fill in .env file
+Fill in `.env` file
 
 ## Data
 
-To create required database tables, update .env file with local database configuration and then run:
+To create required database tables, update `.env` file with local database configuration and then run:
 ```bash
 php artisan migrate
 ```
@@ -60,26 +60,35 @@ Fill in .env.testing file
 
 To setup Codeception tests to run using a Sqlite database:
 
-update .env.testing with teh following details
+Update `.env.testing` with the following details:
+```
 DB_CONNECTION=sqlite
 DB_DATABASE=storage/task_manager_api.sqlite
-
-create Sqlite database in storage (it will be ignored by git) and make it executable
-```bash
-touch storage/task_manager_api.sqlte
-sudo chmod -R 777 storage/task_manager_api.sqlte
 ```
 
-temporarily change .env with the following details
-DB_CONNECTION=sqlite
-DB_DATABASE=storage/task_manager_api.sqlite
+Create Sqlite database in `storage` directory and make it executable:
+*replacing `my_project_db` with your project's SQLite database name.*
+*Will be Git ignored.*
+```bash
+touch storage/my_project_db.sqlite
+sudo chmod -R 777 storage/my_project_db.sqlite
+```
 
-run migrate on Sqlite database
+> **TODO:** find a better way to do this. 
+
+Temporarily change .env with the following details:
+*replacing `my_project_db` with your project's SQLite database name.*
+```bash
+DB_CONNECTION=sqlite
+DB_DATABASE=storage/my_project_db.sqlite
+```
+
+Run migrate on SQLite database:
 ```bash
 php artisan migrate:refresh
 ```
 
-undo changes to .env (there may be a better way to do this) 
+Undo changes to `.env`. 
 
 #### run tests
 

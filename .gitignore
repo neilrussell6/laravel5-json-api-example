@@ -22,3 +22,6 @@ tests/acceptance.suite.yml
 storage/*.sqlite
 storage/*.sqlite-journal
 
+
+tests/_output/*
+tests/_output/*
