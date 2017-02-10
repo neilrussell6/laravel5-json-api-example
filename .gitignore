@@ -4,6 +4,7 @@
 # misc
 /node_modules
 /vendor
+_ignore
 
 # laravel
 /public/storage
@@ -21,7 +22,3 @@ tests/api.suite.yml
 tests/acceptance.suite.yml
 storage/*.sqlite
 storage/*.sqlite-journal
-
-
-tests/_output/*
-tests/_output/*
