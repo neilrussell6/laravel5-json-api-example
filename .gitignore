@@ -12,3 +12,13 @@
 Homestead.json
 Homestead.yaml
 .env
+.env.testing
+
+# codeception
+tests/_output/*
+tests/_support/_generated
+tests/api.suite.yml
+tests/acceptance.suite.yml
+storage/*.sqlite
+storage/*.sqlite-journal
+
