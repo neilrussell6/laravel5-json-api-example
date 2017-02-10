@@ -1,0 +1,14 @@
+# IDE
+/.idea
+
+# misc
+/node_modules
+/vendor
+
+# laravel
+/public/storage
+/public/hot
+/storage/*.key
+Homestead.json
+Homestead.yaml
+.env
