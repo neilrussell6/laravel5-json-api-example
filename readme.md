@@ -1,4 +1,5 @@
-## Laravel 5 JSON API
+Laravel 5 JSON API
+==================
 
 Laravel 5 JSON API implementation.
 
