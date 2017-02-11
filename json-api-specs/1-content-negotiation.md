@@ -16,7 +16,7 @@ Client Responsibilities
 
 Tests:
 
-* tests/api/api/api__GET__request_headers.Cept.php #1
+* tests/api/api/api__GET__request_headers_response_codes.Cept.php #1
 
 #### Request Accept Header
 
@@ -29,8 +29,8 @@ Tests:
 
 Tests:
 
-* tests/api/api/api__GET__request_headers.Cept.php #2
-* tests/api/api/api__GET__request_headers.Cept.php #3
+* tests/api/api/api__GET__request_headers_response_codes.Cept.php #2
+* tests/api/api/api__GET__request_headers_response_codes.Cept.php #3
 
 Server Responsibilities
 -----------------------
@@ -45,7 +45,7 @@ Server Responsibilities
 
 Tests:
 
-* tests/acceptance/api/api__GET__response_headers.Cept.php #1
+* tests/acceptance/api/api__GET__request_headers_response_codes.Cept.php #1
 
 #### Content-Type Header Media Parameters
 
@@ -54,7 +54,7 @@ Tests:
 
 Tests:
 
-* tests/api/api/api__GET__request_headers.Cept.php #4
+* tests/api/api/api__GET__request_headers_response_codes.Cept.php #4
 
 #### Accept Header
 
@@ -63,4 +63,4 @@ Tests:
 
 Tests:
 
-* tests/api/api/api__GET__request_headers.Cept.php #5
+* tests/api/api/api__GET__request_headers_response_codes.Cept.php #5

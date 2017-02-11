@@ -6,12 +6,22 @@ $I = new ApiTester($scenario);
 
 ///////////////////////////////////////////////////////
 //
-// Test general API request headers
+// Test (general API)
 //
+// * request headers
+// * response codes
+// 
 ///////////////////////////////////////////////////////
 
 // ----------------------------------------------------
-// 1) Request headers: JSON API Content-Type & no Accept
+// 1)
+//
+// Request headers:
+// * JSON API Content-Type
+// * no Accept
+//
+// Response code:
+// 200 OK
 //
 // Specs:
 // "Clients MUST send all JSON API data in request
@@ -30,7 +40,14 @@ $I->expect("should return 200 HTTP code");
 $I->seeResponseCodeIs(HttpCode::OK);
 
 // ----------------------------------------------------
-// 2) Request headers: JSON API Content-Type & only JSON API Accept
+// 2)
+//
+// Request headers:
+// * JSON API Content-Type
+// * only JSON API Accept
+//
+// Response code:
+// 200 OK
 //
 // Specs:
 // "Clients that include the JSON API media type in
@@ -49,7 +66,15 @@ $I->expect("should return 200 HTTP code");
 $I->seeResponseCodeIs(HttpCode::OK);
 
 // ----------------------------------------------------
-// 3) Request headers: JSON API Content-Type & JSON API Accept amongst other media types
+// 3)
+//
+// Request headers:
+// * JSON API Content-Type
+// * JSON API Accept amongst other media types
+//
+// Response code:
+// 200 OK
+//
 // ----------------------------------------------------
 
 $I->comment("when we make a GET request to the api an include the JSON API Content-Type header, and JSON API media type amongst others in the Accept header");
@@ -61,7 +86,13 @@ $I->expect("should return 200 HTTP code");
 $I->seeResponseCodeIs(HttpCode::OK);
 
 // ----------------------------------------------------
-// 4) Request headers: JSON API Content-Type but with media type params
+// 4)
+//
+// Request headers:
+// * JSON API Content-Type but with media type params
+//
+// Response code:
+// 415 UNSUPPORTED_MEDIA_TYPE
 //
 // Specs:
 // "Servers MUST respond with a 415 Unsupported Media
@@ -79,7 +110,14 @@ $I->expect("should return 415 HTTP code");
 $I->seeResponseCodeIs(HttpCode::UNSUPPORTED_MEDIA_TYPE);
 
 // ----------------------------------------------------
-// 5) Request headers: JSON API Content-Type & JSON API Accept but with media type params
+// 5)
+//
+// Request headers:
+// * JSON API Content-Type
+// * JSON API Accept but with media type params
+//
+// Response code:
+// 406 NOT_ACCEPTABLE
 //
 // Specs:
 // "Servers MUST respond with a 406 Not Acceptable
