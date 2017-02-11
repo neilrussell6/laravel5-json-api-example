@@ -1,8 +1,8 @@
-JSON API Specs
-==============
+Content Negotiation
+===================
 
-Content Negotiation :: Client Responsibilities
-----------------------------------------------
+Client Responsibilities
+-----------------------
 
 [JSON API docs :: Client Responsibilities](http://jsonapi.org/format/#content-negotiation-clients)
 
@@ -32,8 +32,8 @@ Tests:
 * tests/api/api/api__GET__request_headers.Cept.php #2
 * tests/api/api/api__GET__request_headers.Cept.php #3
 
-Content Negotiation :: Server Responsibilities
-----------------------------------------------
+Server Responsibilities
+-----------------------
 
 [JSON API docs :: Server Responsibilities](http://jsonapi.org/format/#content-negotiation-servers)
 [StackOverflow](http://stackoverflow.com/questions/33485488/json-api-spec-server-responsibilities-explanation)
