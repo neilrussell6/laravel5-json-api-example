@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\Project;
+use App\Models\Task;
+use App\Models\User;
+
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -11,8 +15,7 @@
 |
 */
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(User::class, function (Faker\Generator $faker) {
     static $password;
 
     return [
@@ -20,5 +23,23 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
+    ];
+});
+
+$factory->define(Project::class, function (Faker\Generator $faker) {
+
+    return [
+        'name' => $faker->words(3, true),
+        'status' => $faker->numberBetween(1, 3),
+    ];
+});
+
+$factory->define(Task::class, function (Faker\Generator $faker) {
+    static $project_id;
+
+    return [
+        'name' => $faker->sentence(5),
+        'project_id' => $project_id ?: null,
+        'status' => $faker->numberBetween(1, 3),
     ];
 });
