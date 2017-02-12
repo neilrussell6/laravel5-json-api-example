@@ -311,7 +311,7 @@ $I->sendGET("/api/users?page[limit]=2&page[offset]=5");
 $I->expect("should return pagination link urls for all links, except 'next' link");
 $I->seeResponseJsonPathType('$.links.first', 'string:!empty');
 $I->seeResponseJsonPathType('$.links.last', 'string:!empty');
-$I->seeResponseJsonPathNull('$.links.next');
+$I->seeResponseJsonPathNull('$.links.next', null);
 $I->seeResponseJsonPathType('$.links.prev', 'string:!empty');
 $I->seeResponseJsonPathType('$.links.self', 'string:!empty');
 

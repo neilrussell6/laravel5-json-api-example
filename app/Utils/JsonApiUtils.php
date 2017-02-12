@@ -6,12 +6,89 @@ use Illuminate\Pagination\LengthAwarePaginator;
  * Class JsonApiUtils
  * @package App\Utils
  *
- * A service that transforms various parts of JSON API responses
+ * A utility class that generates various parts of JSON API response
  */
 class JsonApiUtils
 {
     /**
-     * transforms errors for JSON API formatted response
+     * creates a resource object for JSON API formatted response
+     * http://jsonapi.org/format/#document-resource-objects
+     *
+     * @param array $data
+     * @param $type
+     * @param $link_self
+     * @return array
+     */
+    public static function makeResourceObject($data, $type, $link_self)
+    {
+        return [
+            'id'            => strval($data['id']),
+            'type'          => $type,
+            'attributes'    => $data,
+            'links' => [
+                'self' => $link_self
+            ],
+        ];
+    }
+
+    /**
+     * creates a pagination links object for JSON API formatted response
+     * http://jsonapi.org/format/#fetching-pagination
+     *
+     * @param LengthAwarePaginator $paginator
+     * @return array
+     */
+    public static function makePaginationLinksObject(LengthAwarePaginator $paginator, $base_url, $query_params)
+    {
+        $indices = [
+            'current'   => $paginator->currentPage(),
+            'first'     => 1,
+            'last'      => $paginator->lastPage(),
+            'next'      => $paginator->hasMorePages() ? $paginator->currentPage() + 1 : null,
+            'prev'      => !$paginator->onFirstPage() ? $paginator->currentPage() - 1 : null,
+        ];
+
+        $page_query = array_key_exists('page', $query_params) && !is_null($query_params['page']) ? $query_params['page'] : [];
+
+        $query_params = [
+            'current'   => !is_null($indices['current']) ? http_build_query(['page' => array_replace_recursive($page_query, ['offset' => $indices['current']])]) : null,
+            'first'     => !is_null($indices['first']) ? http_build_query(['page' => array_replace_recursive($page_query, ['offset' => $indices['first']])]) : null,
+            'last'      => !is_null($indices['last']) ? http_build_query(['page' => array_replace_recursive($page_query, ['offset' => $indices['last']])]) : null,
+            'next'      => !is_null($indices['next']) ? http_build_query(['page' => array_replace_recursive($page_query, ['offset' => $indices['next']])]) : null,
+            'prev'      => !is_null($indices['prev']) ? http_build_query(['page' => array_replace_recursive($page_query, ['offset' => $indices['prev']])]) : null,
+        ];
+
+        return [
+            'first' => !is_null($indices['first']) ? "{$base_url}?{$query_params['first']}" : null,
+            'last'  => !is_null($indices['last']) ? "{$base_url}?{$query_params['last']}" : null,
+            'next'  => !is_null($indices['next']) ? "{$base_url}?{$query_params['next']}" : null,
+            'prev'  => !is_null($indices['prev']) ? "{$base_url}?{$query_params['prev']}" : null,
+        ];
+    }
+
+    /**
+     * creates a pagination meta object for JSON API formatted response
+     * http://jsonapi.org/format/#fetching-pagination
+     *
+     * @param LengthAwarePaginator $paginator
+     * @return array
+     */
+    public static function makePaginationMetaObject(LengthAwarePaginator $paginator)
+    {
+        return [
+            'pagination' => [
+                'count'         => $paginator->count(),
+                'limit'         => $paginator->perPage(),
+                'offset'        => $paginator->currentPage(),
+                'total_items'   => $paginator->total(),
+                'total_pages'   => $paginator->lastPage(),
+            ]
+        ];
+    }
+
+    /**
+     * creates an error object for JSON API formatted response
+     * http://jsonapi.org/format/#error-objects
      *
      * @param $error_messages
      * @param $http_code

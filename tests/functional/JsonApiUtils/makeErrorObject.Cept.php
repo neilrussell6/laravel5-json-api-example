@@ -7,11 +7,11 @@ $I = new FunctionalTester($scenario);
 
 ///////////////////////////////////////////////////////
 //
-// tests
+// Test: JsonApiUtils::makeErrorObject
 //
 ///////////////////////////////////////////////////////
 
-$I->wantTo("transform error messages for JSON API response");
+$I->wantTo("make an error object for JSON API response");
 
 //-----------------------------------------------------
 // 2 empty messages & no status arg
