@@ -7,7 +7,8 @@ class Project extends Model
     const STATUS_INCOMPLETE = 1;
     const STATUS_COMPLETE   = 2;
     const STATUS_TRASH      = 3;
-    
+
+    public $type            = 'projects';
     protected $fillable     = ['name', 'status'];
     protected $hidden       = [];
 

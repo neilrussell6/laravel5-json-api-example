@@ -7,8 +7,9 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $fillable = ['name', 'email', 'password'];
-    protected $hidden = ['password', 'remember_token'];
+    public $type            = 'users';
+    protected $fillable     = ['name', 'email', 'password'];
+    protected $hidden       = ['password', 'remember_token', 'created_at', 'updated_at'];
 
     public function projects($fields = [])
     {

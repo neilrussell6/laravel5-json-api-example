@@ -1,8 +1,18 @@
 <?php
 
 use Codeception\Util\HttpCode;
+use App\Models\User;
 
 $I = new ApiTester($scenario);
+
+///////////////////////////////////////////////////////
+//
+// before
+//
+///////////////////////////////////////////////////////
+
+$I->comment('given 10 users');
+$users = factory(User::class, 10)->create();
 
 ///////////////////////////////////////////////////////
 //
@@ -66,6 +76,7 @@ $I->seeResponseJsonPathRegex('$.links.self', '/^http\:\/\/[^\/]+\/api/');
 //
 // ----------------------------------------------------
 
+// TODO: test
 //$I->comment("when we make any relationships request");
 //$I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 //$I->haveHttpHeader('Accept', 'application/vnd.api+json'); // this isn't required, but something, I think the Laravel5 Codeception module adds Accept headers, so for tests we need to be explicit.
@@ -91,22 +102,22 @@ $I->seeResponseJsonPathRegex('$.links.self', '/^http\:\/\/[^\/]+\/api/');
 //
 // ----------------------------------------------------
 
-//$I->comment("when we make a request that results in a single entity (view, store, update)");
-//$I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
-//$I->haveHttpHeader('Accept', 'application/vnd.api+json'); // this isn't required, but something, I think the Laravel5 Codeception module adds Accept headers, so for tests we need to be explicit.
-//$I->sendGET("/api/users/1");
-//
-//$I->expect("primary data should be an object");
-////$I->seeResponseJsonPathType('$.data', 'object:!empty'); // TODO: how can we test this ?
-//
-//// ----------------------------------------------------
-//
-//$I->comment("when we make a request that results in multiple entities (index)");
-//$I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
-//$I->haveHttpHeader('Accept', 'application/vnd.api+json'); // this isn't required, but something, I think the Laravel5 Codeception module adds Accept headers, so for tests we need to be explicit.
-//$I->sendGET("/api/users");
-//
-//$I->expect("primary data should be an array");
-//$I->seeResponseJsonPathType('$.data', 'array:!empty');
-//
-//// ----------------------------------------------------
+$I->comment("when we make a request that results in a single entity (view, store, update)");
+$I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
+$I->haveHttpHeader('Accept', 'application/vnd.api+json');
+$I->sendGET("/api/users/1");
+
+$I->expect("primary data should be an object");
+//$I->seeResponseJsonPathType('$.data', 'object:!empty'); // TODO: how can we test this ?
+
+// ----------------------------------------------------
+
+$I->comment("when we make a request that results in multiple entities (index)");
+$I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
+$I->haveHttpHeader('Accept', 'application/vnd.api+json');
+$I->sendGET("/api/users");
+
+$I->expect("primary data should be an array");
+$I->seeResponseJsonPathType('$.data', 'array:!empty');
+
+// ----------------------------------------------------

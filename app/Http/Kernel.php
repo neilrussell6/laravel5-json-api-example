@@ -5,6 +5,18 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 class Kernel extends HttpKernel
 {
     /**
+     * The application's route middleware groups.
+     *
+     * @var array
+     */
+    protected $middlewareGroups = [
+        'api' => [
+            'throttle:60,1',
+            'bindings',
+        ],
+    ];
+
+    /**
      * The application's global HTTP middleware stack.
      *
      * These middleware are run during every request to your application.
@@ -17,18 +29,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\BuildJsonApiResponse::class,
-    ];
-
-    /**
-     * The application's route middleware groups.
-     *
-     * @var array
-     */
-    protected $middlewareGroups = [
-        'api' => [
-            'throttle:60,1',
-            'bindings',
-        ],
+        \App\Http\Middleware\ValidateJsonApiRequest::class,
     ];
 
     /**

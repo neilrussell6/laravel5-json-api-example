@@ -7,7 +7,8 @@ class Task extends Model
     const STATUS_INCOMPLETE = 1;
     const STATUS_COMPLETE   = 2;
     const STATUS_TRASH      = 3;
-    
+
+    public $type            = 'tasks';
     protected $fillable     = ['name', 'status', 'type', 'priority'];
     protected $hidden       = [];
 

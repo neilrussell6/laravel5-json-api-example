@@ -127,6 +127,7 @@ class BaseHelper extends \Codeception\Module
     public function seeJsonPathRegex(array $data, $json_path, $regex)
     {
         $this->seeJSONPath($data, $json_path, function($item) use ($regex) {
+            $this->assertNotNull($item, "could not match null JSON");
             $this->assertRegExp($regex, $item, "JSON does not match regex\n{$regex}");
         });
     }
@@ -134,6 +135,7 @@ class BaseHelper extends \Codeception\Module
     public function seeJsonPathNotRegex(array $data, $json_path, $regex)
     {
         $this->seeJSONPath($data, $json_path, function($item) use ($regex) {
+            $this->assertNotNull($item, "could not match null JSON");
             $this->assertNotRegExp($regex, $item, "JSON does not match regex\n{$regex}");
         });
     }

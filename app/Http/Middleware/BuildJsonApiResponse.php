@@ -14,20 +14,31 @@ class BuildJsonApiResponse
     public function handle($request, Closure $next)
     {
         $response = $next($request);
-        $original_response = $response->getOriginalContent();
 
-//        $url = $request->fullUrl(); // with args
-        $url = $request->url(); // without args
+        // respond with already rendered exception page
+        // if an exception was thrown
 
-        $response->setContent([
+        $exception = $response->exception;
+        if ($exception) {
+            return $response;
+        }
+
+        // build response content
+
+        $original_content = $response->getOriginalContent();
+        $default_content = [
             'jsonapi' => [
                 'version' => '1.0'
             ],
             'links' => [
-                'self' => $url
-            ],
-            'data' => $original_response
-        ]);
+                'self' => $request->fullUrl()
+            ]
+        ];
+
+        // set response content & headers
+
+        $response->setContent(array_merge_recursive($default_content, $original_content));
+        $response->header('Content-Type', 'application/vnd.api+json');
 
         return $response;
     }
