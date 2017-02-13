@@ -11,7 +11,7 @@ $I = new ApiTester($scenario);
 //
 ///////////////////////////////////////////////////////
 
-$I->comment('given 10 users');
+$I->comment("given 10 users");
 $users = factory(User::class, 10)->create();
 
 ///////////////////////////////////////////////////////
@@ -26,7 +26,7 @@ $users = factory(User::class, 10)->create();
 $I->comment("when we make any request");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json'); // this isn't required, but something, I think the Laravel5 Codeception module adds Accept headers, so for tests we need to be explicit.
-$I->sendGET("/api");
+$I->sendGET('/api');
 // TODO: test other methods & endpoints
 
 // ----------------------------------------------------
@@ -82,7 +82,7 @@ $I->seeResponseJsonPathRegex('$.links.self', '/^http\:\/\/[^\/]+\/api/');
 //$I->comment("when we make any relationships request");
 //$I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 //$I->haveHttpHeader('Accept', 'application/vnd.api+json'); // this isn't required, but something, I think the Laravel5 Codeception module adds Accept headers, so for tests we need to be explicit.
-//$I->sendGET("/api/users/1/relationships/tasks");
+//$I->sendGET('/api/users/1/relationships/tasks');
 //
 //$I->expect("should return related link");
 //$I->seeResponseJsonPathRegex('$.links.related', '/^http\:\/\/[^\/]+\/api\/users\/1\/projects/');
@@ -107,7 +107,7 @@ $I->seeResponseJsonPathRegex('$.links.self', '/^http\:\/\/[^\/]+\/api/');
 $I->comment("when we make a request that results in a single entity (view, store, update)");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
-$I->sendGET("/api/users/1");
+$I->sendGET('/api/users/1');
 // TODO: test other methods & endpoints
 
 $I->expect("primary data should be an object");
@@ -118,7 +118,7 @@ $I->expect("primary data should be an object");
 $I->comment("when we make a request that results in multiple entities (index)");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
-$I->sendGET("/api/users");
+$I->sendGET('/api/users');
 // TODO: test other endpoints
 
 $I->expect("primary data should be an array");

@@ -20,8 +20,13 @@ class JsonApiResponseMacroUtils
      */
     public static function makeItemResponse ($data, $type, $full_url)
     {
+        // add id to self link if it is not already there
+        $url_parts = parse_url($full_url);
+        $url_parts['path'] = UrlUtils::containsId($url_parts['path']) ? $url_parts['path'] : "{$url_parts['path']}/{$data['id']}";
+        $link_self = http_build_url($url_parts);
+
         return [
-            'data' => JsonApiUtils::makeResourceObject($data, $type, $full_url)
+            'data' => JsonApiUtils::makeResourceObject($data, $type, $link_self)
         ];
     }
 

@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers;
 
+require(app_path('Functions/build_http_url.php'));
+
 use App\Utils\JsonApiUtils;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
@@ -60,8 +62,8 @@ class Controller extends BaseController
      */
     public function show(Request $request, $id)
     {
-        $data = $this->model->findOrFail($id);
-        return Response::item($request, $data, $this->model->type, 200);
+        $resource = $this->model->findOrFail($id);
+        return Response::item($request, $resource, $this->model->type, 200);
     }
 
     /**
@@ -87,10 +89,12 @@ class Controller extends BaseController
             return response($content, $request_data_validation['error_code']);
         }
 
-        // TODO: store entity
-        return response([
-            'data' => []
-        ], 201);
+        // create & find resource
+        $result = $this->model->create($request_data['data']['attributes']);
+        $resource = $this->model->findOrFail($result->id);
+
+        // return newly created resource
+        return Response::item($request, $resource->toArray(), $this->model->type, 201);
     }
 
     /**
@@ -115,10 +119,13 @@ class Controller extends BaseController
             return response($content, $request_data_validation['error_code']);
         }
 
-        // TODO: update entity
-        return response([
-            'data' => []
-        ], 200);
+        // find & update resource
+        $resource = $this->model->findOrFail($id);
+        $resource->fill($request_data['data']['attributes']);
+        $resource->save();
+
+        // return updated resource
+        return Response::item($request, $resource->toArray(), $this->model->type, 200);
     }
 
     // ----------------------------------------------------

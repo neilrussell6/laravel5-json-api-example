@@ -10,7 +10,7 @@ $I = new ApiTester($scenario);
 //
 ///////////////////////////////////////////////////////
 
-$I->comment('given 10 users');
+$I->comment("given 10 users");
 $users = factory(User::class, 10)->create();
 $user_ids = $users->pluck('id')->all();
 
@@ -30,7 +30,7 @@ $user_ids = $users->pluck('id')->all();
 $I->comment("when we make a request that results in multiple entities (index) but do not include and pagination query params");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
-$I->sendGET("/api/users");
+$I->sendGET('/api/users');
 // TODO: test other endpoints
 
 $I->expect("should return ...");
@@ -75,7 +75,7 @@ $pagination_total_items = 10;
 $pagination_total_pages = 5;
 
 $I->comment("when we make a request that results in 10 entities (index) and provide a page.limit of 2 and a page.offset for page 1 of 5");
-$I->sendGET("/api/users?page[limit]=2&page[offset]=1");
+$I->sendGET('/api/users?page[limit]=2&page[offset]=1');
 
 //-----------------------------------------------------
 
@@ -131,7 +131,7 @@ $pagination_total_items = 10;
 $pagination_total_pages = 5;
 
 $I->comment("when we make a request that results in 10 entities (index) and provide a page.limit of 2 and a page.offset for page 2 of 5");
-$I->sendGET("/api/users?page[limit]=2&page[offset]=2");
+$I->sendGET('/api/users?page[limit]=2&page[offset]=2');
 
 //-----------------------------------------------------
 
@@ -189,7 +189,7 @@ $pagination_total_items = 10;
 $pagination_total_pages = 5;
 
 $I->comment("when we make a request that results in 10 entities (index) and provide a page.limit of 2 and a page.offset for page 3 of 5");
-$I->sendGET("/api/users?page[limit]=2&page[offset]=3");
+$I->sendGET('/api/users?page[limit]=2&page[offset]=3');
 
 //-----------------------------------------------------
 
@@ -247,7 +247,7 @@ $pagination_total_items = 10;
 $pagination_total_pages = 5;
 
 $I->comment("when we make a request that results in 10 entities (index) and provide a page.limit of 2 and a page.offset for page 4 of 5");
-$I->sendGET("/api/users?page[limit]=2&page[offset]=4");
+$I->sendGET('/api/users?page[limit]=2&page[offset]=4');
 
 //-----------------------------------------------------
 
@@ -305,7 +305,7 @@ $pagination_total_items = 10;
 $pagination_total_pages = 5;
 
 $I->comment("when we make a request that results in 10 entities (index) and provide a page.limit of 2 and a page.offset for page 5 of 5");
-$I->sendGET("/api/users?page[limit]=2&page[offset]=5");
+$I->sendGET('/api/users?page[limit]=2&page[offset]=5');
 
 //-----------------------------------------------------
 

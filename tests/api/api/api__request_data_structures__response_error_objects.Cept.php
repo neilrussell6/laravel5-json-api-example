@@ -20,7 +20,7 @@ $I = new ApiTester($scenario);
 $I->comment("when we make a request that results in an 'Unprocessable Entity' error (no data or type provided)");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
-$I->sendPOST("/api/tasks", []);
+$I->sendPOST('/api/tasks', []);
 // TODO: test POST with no type
 
 $I->expect("should return an array of errors");

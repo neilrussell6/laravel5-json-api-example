@@ -12,7 +12,7 @@ class User extends Authenticatable
     protected $fillable     = ['name', 'email', 'password'];
     protected $hidden       = ['password', 'remember_token'];
 
-    public $type            = 'users';
+    public $type = 'users';
     public $rules = [
         'name' => 'required',
         'email' => 'required|email|unique:users',

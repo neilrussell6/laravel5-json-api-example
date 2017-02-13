@@ -1,4 +1,4 @@
-<?php namespace App\Api\V1\Controllers;
+<?php namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;

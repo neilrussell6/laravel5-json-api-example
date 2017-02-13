@@ -1,27 +1,29 @@
 <?php
 
-use Codeception\Util\HttpCode;
+use App\Models\Project;
 
 $I = new ApiTester($scenario);
+
+///////////////////////////////////////////////////////
+//
+// before
+//
+///////////////////////////////////////////////////////
+
+$I->comment("given no projects");
+$I->assertSame(0, Project::all()->count());
 
 ///////////////////////////////////////////////////////
 //
 // Test (general API)
 //
 // * create resource
-// * response codes
+// * check data is created
 //
 ///////////////////////////////////////////////////////
 
 // ----------------------------------------------------
-// 1) create resource -> 201 Created
-//
-// Specs:
-// "the server MUST return either a 201 Created status
-// code and response document (as described above) or
-// a 204 No Content status code with no response
-// document."
-//
+// 1) create resource
 // ----------------------------------------------------
 
 $I->comment("when we make a request to create a resource");
@@ -37,5 +39,5 @@ $I->sendPOST('/api/projects', [
 ]);
 // TODO: test other endpoints
 
-$I->expect("should return 201 HTTP code");
-$I->seeResponseCodeIs(HttpCode::CREATED);
+$I->expect("should create 1 new record");
+$I->assertSame(1, Project::all()->count());
