@@ -1,16 +1,23 @@
 <?php namespace App\Models;
 
+use App\Traits\Validatable;
 use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
+    use Validatable;
+    
     const STATUS_INCOMPLETE = 1;
     const STATUS_COMPLETE   = 2;
     const STATUS_TRASH      = 3;
 
-    public $type            = 'tasks';
     protected $fillable     = ['name', 'status', 'type', 'priority'];
     protected $hidden       = [];
+
+    public $type = 'tasks';
+    public $rules = [
+        'name' => 'required'
+    ];
 
     public function projects()
     {

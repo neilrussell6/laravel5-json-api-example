@@ -18,6 +18,16 @@ class Api extends BaseHelper
         $this->getModule('Laravel5')->_request('POST', $endpoint, $data);
     }
 
+    public function sendPATCH($endpoint, $data)
+    {
+        $this->getModule('Laravel5')->_request('PATCH', $endpoint, $data);
+    }
+
+    public function sendDELETE($endpoint, $data)
+    {
+        $this->getModule('Laravel5')->_request('DELETE', $endpoint, $data);
+    }
+
     //-----------------------------------
     // response
     //-----------------------------------

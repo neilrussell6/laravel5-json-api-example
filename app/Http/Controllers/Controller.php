@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 
 class Controller extends BaseController
 {
@@ -73,44 +74,95 @@ class Controller extends BaseController
     public function store(Request $request)
     {
         $request_data = $request->all();
-        $errors = [];
-        $error_code = null;
 
-        // validate request data : data.type
-        if ($this->model['type'] !== $request_data['data']['type']) {
-
-            $error_code = 422;
-            $errors = JsonApiUtils::makeErrorObjects([[
-                'title' => "Invalid request",
-                'detail' => "The request resource object type member does not match the request endpoint."
-            ]], $error_code);
-        }
-
-        //        // validate attributes
-        //
-        //        $attributes = array_key_exists('attributes', $request_data['data']) ? $request_data['data']['attributes'] : [];
-        //        $validator = Validator::make($attributes, $this->rules, $this->messages);
-        //
-        //        if ($validator->fails()) {
-        //            $response = TransformerUtils::transformAttributeValidationErrors($validator->errors()->getMessages());
-        //            return $this->response->array($response)->statusCode(422);
-        //        }
+        $request_data_validation = $this->validateRequestData($request_data, $request->fullUrl());
 
         // respond with error
-        if (!empty($errors)) {
+        if (!empty($request_data_validation['errors'])) {
+
             $content = JsonApiUtils::makeResponseObject([
-                'errors' => $errors
+                'errors' => $request_data_validation['errors']
             ], $request->fullUrl());
 
-            return response($content, $error_code);
+            return response($content, $request_data_validation['error_code']);
         }
 
         // TODO: store entity
+        return response([
+            'data' => []
+        ], 201);
+    }
+
+    /**
+     * validates input, then update the given resource item.
+     * returns either: validation error, creation error or successfully created new resource item.
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function update(Request $request, $id)
+    {
+        $request_data = $request->all();
+        $request_data_validation = $this->validateRequestData($request_data, $request->fullUrl());
+
+        // respond with error
+        if (!empty($request_data_validation['errors'])) {
+
+            $content = JsonApiUtils::makeResponseObject([
+                'errors' => $request_data_validation['errors']
+            ], $request->fullUrl());
+
+            return response($content, $request_data_validation['error_code']);
+        }
+
+        // TODO: update entity
+        return response([
+            'data' => []
+        ], 200);
     }
 
     // ----------------------------------------------------
     // utils
     // ----------------------------------------------------
+
+    /**
+     * validate request data
+     * returns and array of JSON API error objects
+     *
+     * @param $request_data
+     * @return array
+     */
+    protected function validateRequestData($request_data)
+    {
+        $result = [
+            'errors' => [],
+            'error_code' => null
+        ];
+
+        // validate request data : data.type
+        if ($this->model['type'] !== $request_data['data']['type']) {
+
+            $result['error_code'] = 422;
+            $result['errors'] = JsonApiUtils::makeErrorObjects([[
+                'title' => "Invalid request",
+                'detail' => "The request resource object type member does not match the request endpoint."
+            ]], $result['error_code']);
+        }
+
+        else {
+
+            // validate attributes
+            $attributes = array_key_exists('attributes', $request_data['data']) ? $request_data['data']['attributes'] : [];
+            $validator = Validator::make($attributes, $this->model->rules, $this->model->messages);
+
+            if ($validator->fails()) {
+                $result['error_code'] = 422;
+                $result['errors'] = JsonApiUtils::makeErrorObjectsFromAttributeValidationErrors($validator->errors()->getMessages(), $result['error_code']);
+            }
+        }
+
+        return $result;
+    }
 
     /**
      * make pagination options

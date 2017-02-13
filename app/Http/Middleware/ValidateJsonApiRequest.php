@@ -75,13 +75,9 @@ class ValidateJsonApiRequest
             }
         }
 
-        // respond with error
+        // respond with errors
         if (!empty($errors)) {
-            $content = JsonApiUtils::makeResponseObject([
-                'errors' => $errors
-            ], $request->fullUrl());
-
-            return response($content, $error_code);
+            return response([ 'errors' => $errors ], $error_code);
         }
 
         // ...

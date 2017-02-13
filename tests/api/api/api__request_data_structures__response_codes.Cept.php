@@ -74,3 +74,26 @@ $I->sendPOST("/api/tasks", [
 
 $I->expect("should return 422 HTTP code");
 $I->seeResponseCodeIs(HttpCode::UNPROCESSABLE_ENTITY);
+
+// ----------------------------------------------------
+// 4) Attribute validation failed -> 422 UNPROCESSABLE_ENTITY
+// ----------------------------------------------------
+
+$I->comment("when we make a request that requires data (store, update) and that data does not pass the entities attribute validation");
+$I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
+$I->haveHttpHeader('Accept', 'application/vnd.api+json');
+$I->sendPOST("/api/users", [
+    'data' => [
+        'type' => 'users',
+        'attributes' => [
+            'name' => 'AAA',
+            'email' => 'aaa@aaa.aaa',
+            'password' => 'Test123!',
+//            'password_confirmation' => 'Test123!'
+        ]
+    ]
+]);
+// TODO: test other methods & endpoints
+
+$I->expect("should return 422 HTTP code");
+$I->seeResponseCodeIs(HttpCode::UNPROCESSABLE_ENTITY);

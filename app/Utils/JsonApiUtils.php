@@ -87,7 +87,7 @@ class JsonApiUtils
     }
 
     /**
-     * creates an error object for JSON API formatted response
+     * creates an array of error objects error object for JSON API formatted response
      * http://jsonapi.org/format/#error-objects
      *
      * @param $error_messages
@@ -115,6 +115,29 @@ class JsonApiUtils
 
             return $result;
         }, $error_messages);
+    }
+
+    /**
+     * creates an array of error objects from attribute validation errors for JSON API formatted response
+     * http://jsonapi.org/format/#error-objects
+     *
+     * @param $attribute_validation_error_messages
+     * @param $http_code
+     * @return array
+     */
+    public static function makeErrorObjectsFromAttributeValidationErrors(array $attribute_validation_error_messages, $http_code = 422)
+    {
+        $error_messages = array_map(function($field) use ($attribute_validation_error_messages) {
+            return [
+                'detail'    => $attribute_validation_error_messages[ $field ][0],
+                'source'    => [
+                    'pointer' => "/data/attributes/{$field}"
+                ],
+                'title'     => "Invalid Attribute"
+            ];
+        }, array_keys($attribute_validation_error_messages));
+
+        return self::makeErrorObjects($error_messages, $http_code);
     }
 
     /**

@@ -17,17 +17,10 @@ $I = new ApiTester($scenario);
 // 1) Error: 405 Method Not Allowed
 // ----------------------------------------------------
 
-$I->comment("when we make a request that results in an 'Method Not Allowed' error (store or delete user)");
+$I->comment("when we make a request that results in an 'Method Not Allowed' error (delete user)");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
-$I->sendPOST("/api/users", [
-    'data' => [
-        'type' => 'users',
-        'attributes' => [
-            'name' => "AAA"
-        ]
-    ]
-]);
+$I->sendDELETE("/api/users");
 // TODO: test other methods & endpoints
 
 $I->expect("should return an array of errors");
