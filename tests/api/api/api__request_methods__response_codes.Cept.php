@@ -22,9 +22,13 @@ $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
 $I->sendPOST("/api/users", [
     'data' => [
-        'name' => "AAA"
+        'type' => 'users',
+        'attributes' => [
+            'name' => "AAA"
+        ]
     ]
 ]);
+// TODO: test other methods & endpoints
 
 $I->expect("should return 405 HTTP code");
 $I->seeResponseCodeIs(HttpCode::METHOD_NOT_ALLOWED);

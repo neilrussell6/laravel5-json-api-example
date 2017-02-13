@@ -81,6 +81,7 @@ $I->comment("when we make a GET request to the api an include the JSON API Conte
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'text/plain, application/vnd.api+json, application/json');
 $I->sendGET('/api');
+// TODO: test other methods & endpoints
 
 $I->expect("should return 200 HTTP code");
 $I->seeResponseCodeIs(HttpCode::OK);
@@ -105,6 +106,7 @@ $I->seeResponseCodeIs(HttpCode::OK);
 $I->comment("when we make a GET request to the api an include the JSON API Content-Type header but with media type params");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json; version=1');
 $I->sendGET("/api");
+// TODO: test other methods & endpoints
 
 $I->expect("should return 415 HTTP code");
 $I->seeResponseCodeIs(HttpCode::UNSUPPORTED_MEDIA_TYPE);
@@ -131,6 +133,7 @@ $I->comment("when we make a GET request to the api an include the JSON API Conte
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json; version=1');
 $I->sendGET("/api");
+// TODO: test other methods & endpoints
 
 $I->expect("should return 406 HTTP code");
 $I->seeResponseCodeIs(HttpCode::NOT_ACCEPTABLE);

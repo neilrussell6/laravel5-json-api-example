@@ -72,6 +72,39 @@ class Controller extends BaseController
      */
     public function store(Request $request)
     {
+        $request_data = $request->all();
+        $errors = [];
+        $error_code = null;
+
+        // validate request data : data.type
+        if ($this->model['type'] !== $request_data['data']['type']) {
+
+            $error_code = 422;
+            $errors = JsonApiUtils::makeErrorObjects([[
+                'title' => "Invalid request",
+                'detail' => "The request resource object type member does not match the request endpoint."
+            ]], $error_code);
+        }
+
+        //        // validate attributes
+        //
+        //        $attributes = array_key_exists('attributes', $request_data['data']) ? $request_data['data']['attributes'] : [];
+        //        $validator = Validator::make($attributes, $this->rules, $this->messages);
+        //
+        //        if ($validator->fails()) {
+        //            $response = TransformerUtils::transformAttributeValidationErrors($validator->errors()->getMessages());
+        //            return $this->response->array($response)->statusCode(422);
+        //        }
+
+        // respond with error
+        if (!empty($errors)) {
+            $content = JsonApiUtils::makeResponseObject([
+                'errors' => $errors
+            ], $request->fullUrl());
+
+            return response($content, $error_code);
+        }
+
         // TODO: store entity
     }
 

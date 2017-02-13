@@ -54,7 +54,7 @@ class ValidateJsonApiRequest
 
             $request_data = $request->all();
 
-            // validate request structure : property : data
+            // validate request data : data
             if (!array_key_exists('data', $request_data)) {
 
                 $error_code = 422;
@@ -63,68 +63,28 @@ class ValidateJsonApiRequest
                     'detail' => "The request MUST include a single resource object as primary data."
                 ]], $error_code);
             }
-        }
 
-//        // validate structure : property : data.type
-//
-//        if (!array_key_exists('type', $request_data['data'])) {
-//            $response = TransformerUtils::transformErrors([[
-//                'title' => TransformerUtils::ERROR_TITLE_INVALID_REQUEST_STRUCTURE_TYPE,
-//                'detail' => "The request MUST include a type property."
-//            ]]);
-//
-//            return $this->response->array($response)->statusCode(422);
-//        }
-//
-//        // validate data.type
-//
-//        if ($this->model['type'] !== $request_data['data']['type']) {
-//            $response = TransformerUtils::transformErrors([[
-//                'title' => TransformerUtils::ERROR_TITLE_UNSUPPORTED_TYPE,
-//                'detail' => "The request MUST include a supported type."
-//            ]]);
-//
-//            return $this->response->array($response)->statusCode(422);
-//        }
-//
-//        // validate attributes
-//
-//        $attributes = array_key_exists('attributes', $request_data['data']) ? $request_data['data']['attributes'] : [];
-//        $validator = Validator::make($attributes, $this->rules, $this->messages);
-//
-//        if ($validator->fails()) {
-//            $response = TransformerUtils::transformAttributeValidationErrors($validator->errors()->getMessages());
-//            return $this->response->array($response)->statusCode(422);
-//        }
+            // validate request data : data.type
+            else if (!array_key_exists('type', $request_data['data'])) {
+
+                $error_code = 422;
+                $errors = JsonApiUtils::makeErrorObjects([[
+                    'title' => "Invalid request",
+                    'detail' => "The request resource object MUST contain at least a type member."
+                ]], $error_code);
+            }
+        }
 
         // respond with error
         if (!empty($errors)) {
             $content = JsonApiUtils::makeResponseObject([
                 'errors' => $errors
             ], $request->fullUrl());
-            
+
             return response($content, $error_code);
         }
 
-//        // set is_valid request attribute so that controller logic can be skipped
-//        $request->attributes->add(['is_valid' => empty($error)]);
-
         // ...
         return $next($request);
-//        $response = $next($request);
-//
-//        // respond with already rendered exception page
-//        // if an exception was thrown
-//        $exception = $response->exception;
-//        if ($exception) {
-//            return $response;
-//        }
-//
-//        // update response
-//        if (!empty($error)) {
-//            $response->setContent(['errors' => $error['messages']]);
-//        }
-//
-//        return $response;
     }
 }

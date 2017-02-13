@@ -31,6 +31,7 @@ $I->comment("when we make a request that results in multiple entities (index) bu
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
 $I->sendGET("/api/users");
+// TODO: test other endpoints
 
 $I->expect("should return ...");
 // TODO: test

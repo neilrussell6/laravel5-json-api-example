@@ -17,10 +17,11 @@ $I = new ApiTester($scenario);
 // 1) Error: 422 UNPROCESSABLE_ENTITY
 // ----------------------------------------------------
 
-$I->comment("when we make a request that results in an 'Unprocessable Entity' error (no data provided)");
+$I->comment("when we make a request that results in an 'Unprocessable Entity' error (no data or type provided)");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
 $I->sendPOST("/api/tasks", []);
+// TODO: test POST with no type
 
 $I->expect("should return an array of errors");
 $I->seeResponseJsonPathType('$.errors', 'array:!empty');

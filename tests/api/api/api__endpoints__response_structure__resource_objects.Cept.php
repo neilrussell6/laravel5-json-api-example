@@ -35,6 +35,7 @@ $I->comment("when we make a request that results in a single entity (view, store
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
 $I->sendGET("/api/users/1");
+// TODO: test other methods & endpoints
 
 $I->expect("should return type value for resource object");
 $I->seeResponseJsonPathSame('$.data.type', 'users');
@@ -48,6 +49,7 @@ $I->comment("when we make a request that results in multiple entities (index)");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
 $I->sendGET("/api/users");
+// TODO: test other endpoints
 
 $I->expect("should return type value for each resource object");
 $I->seeResponseJsonPathSame('$.data[*].type', 'users');
@@ -69,6 +71,7 @@ $I->comment("when we make a request that results in a single entity (view, store
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
 $I->sendGET("/api/users/1");
+// TODO: test other methods & endpoints
 
 $I->expect("should return an attributes object, containing the entity's visible properties");
 $I->seeResponseJsonPathType('$.data.attributes', 'array:!empty');
@@ -81,6 +84,7 @@ $I->comment("when we make a request that results in multiple entities (index)");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
 $I->sendGET("/api/users");
+// TODO: test other endpoints
 
 $I->expect("should return an attributes object for each entity, containing it's visible properties");
 $I->seeResponseJsonPathType('$.data[*].attributes', 'array:!empty');
@@ -127,6 +131,7 @@ $I->comment("when we make a request that results in a single entity (view, store
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
 $I->sendGET("/api/users/1");
+// TODO: test other methods & endpoints
 
 $I->expect("should return a links object containing only a self property");
 $I->seeResponseJsonPathType('$.data.links', 'array:!empty');
@@ -138,6 +143,7 @@ $I->comment("when we make a request that results in multiple entities (index)");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
 $I->sendGET("/api/users");
+// TODO: test other endpoints
 
 $I->expect("should return a links object for each entity containing only a self property");
 $I->seeResponseJsonPathType('$.data[*].links', 'array:!empty');

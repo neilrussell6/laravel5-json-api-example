@@ -27,6 +27,7 @@ $I->comment("when we make any request");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json'); // this isn't required, but something, I think the Laravel5 Codeception module adds Accept headers, so for tests we need to be explicit.
 $I->sendGET("/api");
+// TODO: test other methods & endpoints
 
 // ----------------------------------------------------
 // 1) jsonapi.version
@@ -107,6 +108,7 @@ $I->comment("when we make a request that results in a single entity (view, store
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
 $I->sendGET("/api/users/1");
+// TODO: test other methods & endpoints
 
 $I->expect("primary data should be an object");
 //$I->seeResponseJsonPathType('$.data', 'object:!empty'); // TODO: how can we test this ?
@@ -117,6 +119,7 @@ $I->comment("when we make a request that results in multiple entities (index)");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
 $I->sendGET("/api/users");
+// TODO: test other endpoints
 
 $I->expect("primary data should be an array");
 $I->seeResponseJsonPathType('$.data', 'array:!empty');
