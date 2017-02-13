@@ -18,6 +18,7 @@ $users = factory(User::class, 10)->create();
 //
 // Test (general API)
 //
+// * various endpoints
 // * top level response structure
 //
 ///////////////////////////////////////////////////////

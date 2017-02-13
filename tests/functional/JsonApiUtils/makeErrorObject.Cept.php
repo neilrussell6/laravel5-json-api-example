@@ -7,7 +7,7 @@ $I = new FunctionalTester($scenario);
 
 ///////////////////////////////////////////////////////
 //
-// Test: JsonApiUtils::makeErrorObject
+// Test: JsonApiUtils::makeErrorObjects
 //
 ///////////////////////////////////////////////////////
 
@@ -19,7 +19,7 @@ $I->wantTo("make an error object for JSON API response");
 
 $I->comment("given 2 empty messages & no status arg");
 $error_messages = [[], []];
-$result = JsonApiUtils::makeErrorObject($error_messages);
+$result = JsonApiUtils::makeErrorObjects($error_messages);
 
 //-----------------------------------------------------
 
@@ -48,7 +48,7 @@ $I->seeNotJSONPath($result, '$.[*].parameter');
 
 $I->comment("2 empty messages & status arg");
 $error_messages = [[], []];
-$result = JsonApiUtils::makeErrorObject($error_messages, HttpCode::UNAUTHORIZED);
+$result = JsonApiUtils::makeErrorObjects($error_messages, HttpCode::UNAUTHORIZED);
 
 //-----------------------------------------------------
 
@@ -82,7 +82,7 @@ $error_messages = [
     ]
 ];
 
-$result = JsonApiUtils::makeErrorObject($error_messages, HttpCode::CONFLICT);
+$result = JsonApiUtils::makeErrorObjects($error_messages, HttpCode::CONFLICT);
 
 //-----------------------------------------------------
 

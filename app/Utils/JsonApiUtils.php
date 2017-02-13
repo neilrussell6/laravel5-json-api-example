@@ -94,7 +94,7 @@ class JsonApiUtils
      * @param $http_code
      * @return array
      */
-    public static function makeErrorObject(array $error_messages, $http_code = 422)
+    public static function makeErrorObjects(array $error_messages, $http_code = 422)
     {
         return array_map(function($message) use ($http_code) {
 

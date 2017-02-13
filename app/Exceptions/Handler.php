@@ -4,6 +4,7 @@ use App\Utils\JsonApiUtils;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
@@ -44,17 +45,36 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        // Endpoint not found
-        if ($exception instanceof NotFoundHttpException) {
-            $error_object = JsonApiUtils::makeErrorObject([[
-                'title' => "Endpoint not found",
-                'detail' => "The requested endpoint is unknown, it may be misspelled."
-            ]], $exception->getStatusCode());
+        $errors = [];
+        $error_code = null;
 
+        switch (get_class($exception)) {
+
+            // Endpoint not found
+            case NotFoundHttpException::class:
+                $error_code = $exception->getStatusCode();
+                $errors = JsonApiUtils::makeErrorObjects([[
+                    'title' => "Endpoint not found",
+                    'detail' => "The requested endpoint is unknown, it may be misspelled."
+                ]], $error_code);
+                break;
+
+            // Method not allowed
+            case MethodNotAllowedHttpException::class:
+                $error_code = $exception->getStatusCode();
+                $errors = JsonApiUtils::makeErrorObjects([[
+                    'title' => "Method not allowed",
+                    'detail' => "The requested method is not allowed by this endpoint."
+                ]], $error_code);
+                break;
+        }
+
+        // respond with error
+        if (!empty($errors)) {
             $content = JsonApiUtils::makeResponseObject([
-                'errors' => $error_object
+                'errors' => $errors
             ], $request->fullUrl());
-            return response($content, $exception->getStatusCode());
+            return response($content, $error_code);
         }
 
         return parent::render($request, $exception);

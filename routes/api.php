@@ -18,5 +18,7 @@ Route::group(['middleware' => ['api'], 'namespace' => 'Api'], function () {
 
     Route::get('', 'ApiController@index');
 
-    Route::resource('users', 'UsersController', ['except' => ['create', 'store', 'destroy']]);
+    Route::resource('users', 'UsersController', ['except' => ['store', 'destroy']]);
+    Route::resource('tasks', 'TasksController');
+    Route::resource('projects', 'ProjectsController');
 });

@@ -8,19 +8,23 @@ $I = new ApiTester($scenario);
 //
 // Test (general API)
 //
-// * various endpoints
-// * response error objects
+// * request methods
+// * response codes
 //
 ///////////////////////////////////////////////////////
 
 // ----------------------------------------------------
-// 1) Error: Not found
+// 1) Error: 405 Method Not Allowed
 // ----------------------------------------------------
 
-$I->comment("when we make a request that results in an 404 error (unknown endpoint)");
+$I->comment("when we make a request that results in an 'Method Not Allowed' error (store or delete user)");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
-$I->sendGET("/api/unknown");
+$I->sendPOST("/api/users", [
+    'data' => [
+        'name' => "AAA"
+    ]
+]);
 
 $I->expect("should return an array of errors");
 $I->seeResponseJsonPathType('$.errors', 'array:!empty');
@@ -30,6 +34,6 @@ $errors = $I->grabResponseJsonPath('$.errors[*]');
 $I->assertSame(count($errors), 1);
 
 $I->expect("error object should contain a status, title and detail member");
-$I->seeResponseJsonPathSame('$.errors[0].status', HttpCode::NOT_FOUND);
+$I->seeResponseJsonPathSame('$.errors[0].status', HttpCode::METHOD_NOT_ALLOWED);
 $I->seeResponseJsonPathType('$.errors[0].title', 'string:!empty');
 $I->seeResponseJsonPathType('$.errors[0].detail', 'string:!empty');

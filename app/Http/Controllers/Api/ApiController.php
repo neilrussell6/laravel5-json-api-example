@@ -24,10 +24,6 @@ class ApiController extends Controller
      */
     public function index(Request $request)
     {
-        if (!$request->get('is_valid')) {
-            return response(null, $request->get('status'));
-        }
-
         return response([
             'data' => []
         ], 200);

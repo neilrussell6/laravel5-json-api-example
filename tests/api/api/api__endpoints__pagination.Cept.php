@@ -18,7 +18,7 @@ $user_ids = $users->pluck('id')->all();
 //
 // Test (general API)
 //
-// * endpoints
+// * various endpoints
 // * pagination
 //
 ///////////////////////////////////////////////////////

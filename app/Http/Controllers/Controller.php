@@ -44,10 +44,6 @@ class Controller extends BaseController
      */
     public function index(Request $request)
     {
-        if (!$request->get('is_valid')) {
-            return response(null, $request->get('status'));
-        }
-
         $pagination_options = $this->makePaginationOptions($request);
         $paginator = $this->model->paginate($pagination_options['limit'], ['*'], "page['offset']", $pagination_options['offset']);
 
@@ -65,6 +61,18 @@ class Controller extends BaseController
     {
         $data = $this->model->findOrFail($id);
         return Response::item($request, $data, $this->model->type, 200);
+    }
+
+    /**
+     * validates input, then creates a new resource item.
+     * returns either: validation error, creation error or successfully created new resource item.
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function store(Request $request)
+    {
+        // TODO: store entity
     }
 
     // ----------------------------------------------------

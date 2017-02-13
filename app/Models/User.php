@@ -9,7 +9,7 @@ class User extends Authenticatable
 
     public $type            = 'users';
     protected $fillable     = ['name', 'email', 'password'];
-    protected $hidden       = ['password', 'remember_token', 'created_at', 'updated_at'];
+    protected $hidden       = ['password', 'remember_token'];
 
     public function projects($fields = [])
     {

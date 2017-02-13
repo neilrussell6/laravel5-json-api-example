@@ -29,7 +29,7 @@ $errors = $I->grabResponseJsonPath('$.errors[*]');
 $I->assertSame(count($errors), 1);
 
 $I->expect("error object should contain a status, title and detail member");
-$I->seeResponseJsonPathSame('$.errors[0].status', 415);
+$I->seeResponseJsonPathSame('$.errors[0].status', HttpCode::UNSUPPORTED_MEDIA_TYPE);
 $I->seeResponseJsonPathType('$.errors[0].title', 'string:!empty');
 $I->seeResponseJsonPathType('$.errors[0].detail', 'string:!empty');
 
@@ -50,6 +50,6 @@ $errors = $I->grabResponseJsonPath('$.errors[*]');
 $I->assertSame(count($errors), 1);
 
 $I->expect("error object should contain a status, title and detail member");
-$I->seeResponseJsonPathSame('$.errors[0].status', 406);
+$I->seeResponseJsonPathSame('$.errors[0].status', HttpCode::NOT_ACCEPTABLE);
 $I->seeResponseJsonPathType('$.errors[0].title', 'string:!empty');
 $I->seeResponseJsonPathType('$.errors[0].detail', 'string:!empty');

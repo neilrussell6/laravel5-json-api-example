@@ -8,19 +8,23 @@ $I = new ApiTester($scenario);
 //
 // Test (general API)
 //
-// * various endpoints
+// * request methods
 // * response codes
 //
 ///////////////////////////////////////////////////////
 
 // ----------------------------------------------------
-// 1) Unknown endpoint -> 404 NOT FOUND
+// 1) invalid method -> 405 Method Not Allowed
 // ----------------------------------------------------
 
-$I->comment("when we make a request that results in an 404 error (unknown endpoint)");
+$I->comment("when we make a request that results in an 'Method Not Allowed' error (store or delete user)");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
-$I->sendGET("/api/unknown");
+$I->sendPOST("/api/users", [
+    'data' => [
+        'name' => "AAA"
+    ]
+]);
 
-$I->expect("should return 404 HTTP code");
-$I->seeResponseCodeIs(HttpCode::NOT_FOUND);
+$I->expect("should return 405 HTTP code");
+$I->seeResponseCodeIs(HttpCode::METHOD_NOT_ALLOWED);
