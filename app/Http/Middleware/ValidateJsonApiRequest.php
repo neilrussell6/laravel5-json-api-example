@@ -59,7 +59,6 @@ class ValidateJsonApiRequest
 
         // respond with already rendered exception page
         // if an exception was thrown
-
         $exception = $response->exception;
         if ($exception) {
             return $response;

@@ -21,7 +21,17 @@ $I->comment("when we make a request that results in an 'Unsupported media type' 
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json; version=1');
 $I->sendGET("/api");
 
-// TODO: test error object
+$I->expect("should return an array of errors");
+$I->seeResponseJsonPathType('$.errors', 'array:!empty');
+
+$I->expect("should return a single error object in errors array");
+$errors = $I->grabResponseJsonPath('$.errors[*]');
+$I->assertSame(count($errors), 1);
+
+$I->expect("error object should contain a status, title and detail member");
+$I->seeResponseJsonPathSame('$.errors[0].status', 415);
+$I->seeResponseJsonPathType('$.errors[0].title', 'string:!empty');
+$I->seeResponseJsonPathType('$.errors[0].detail', 'string:!empty');
 
 // ----------------------------------------------------
 // 2) Error: Not Acceptable
@@ -32,4 +42,14 @@ $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json; version=1');
 $I->sendGET("/api");
 
-// TODO: test error object
+$I->expect("should return an array of errors");
+$I->seeResponseJsonPathType('$.errors', 'array:!empty');
+
+$I->expect("should return a single error object in errors array");
+$errors = $I->grabResponseJsonPath('$.errors[*]');
+$I->assertSame(count($errors), 1);
+
+$I->expect("error object should contain a status, title and detail member");
+$I->seeResponseJsonPathSame('$.errors[0].status', 406);
+$I->seeResponseJsonPathType('$.errors[0].title', 'string:!empty');
+$I->seeResponseJsonPathType('$.errors[0].detail', 'string:!empty');

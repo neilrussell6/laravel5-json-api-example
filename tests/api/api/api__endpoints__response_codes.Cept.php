@@ -23,9 +23,10 @@ $I = new ApiTester($scenario);
 //
 // ----------------------------------------------------
 
-//$I->comment("when we make a request that results in an 404 error (unknown endpoint)");
-//$I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
-//$I->sendGET("/unknown");
-//
-//$I->expect("should return 404 HTTP code");
-//$I->seeResponseCodeIs(HttpCode::NOT_FOUND);
+$I->comment("when we make a request that results in an 404 error (unknown endpoint)");
+$I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
+$I->haveHttpHeader('Accept', 'application/vnd.api+json');
+$I->sendGET("/api/unknown");
+
+$I->expect("should return 404 HTTP code");
+$I->seeResponseCodeIs(HttpCode::NOT_FOUND);

@@ -1,8 +1,10 @@
 <?php namespace App\Exceptions;
 
+use App\Utils\JsonApiUtils;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -42,6 +44,19 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // Endpoint not found
+        if ($exception instanceof NotFoundHttpException) {
+            $error_object = JsonApiUtils::makeErrorObject([[
+                'title' => "Endpoint not found",
+                'detail' => "The requested endpoint is unknown, it may be misspelled."
+            ]], $exception->getStatusCode());
+
+            $content = JsonApiUtils::makeResponseObject([
+                'errors' => $error_object
+            ], $request->fullUrl());
+            return response($content, $exception->getStatusCode());
+        }
+
         return parent::render($request, $exception);
     }
 

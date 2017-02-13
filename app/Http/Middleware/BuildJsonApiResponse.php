@@ -1,5 +1,6 @@
 <?php namespace App\Http\Middleware;
 
+use App\Utils\JsonApiUtils;
 use Closure;
 
 class BuildJsonApiResponse
@@ -17,27 +18,14 @@ class BuildJsonApiResponse
 
         // respond with already rendered exception page
         // if an exception was thrown
-
         $exception = $response->exception;
         if ($exception) {
             return $response;
         }
 
-        // build response content
-
-        $original_content = $response->getOriginalContent();
-        $default_content = [
-            'jsonapi' => [
-                'version' => '1.0'
-            ],
-            'links' => [
-                'self' => $request->fullUrl()
-            ]
-        ];
-
-        // set response content & headers
-
-        $response->setContent(array_merge_recursive($default_content, $original_content));
+        // make response content and update response
+        $content = JsonApiUtils::makeResponseObject($response->getOriginalContent(), $request->fullUrl());
+        $response->setContent($content);
         $response->header('Content-Type', 'application/vnd.api+json');
 
         return $response;

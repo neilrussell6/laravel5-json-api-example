@@ -116,4 +116,29 @@ class JsonApiUtils
             return $result;
         }, $error_messages);
     }
+
+    /**
+     * creates the top level object for JSON API formatted response
+     * http://jsonapi.org/format/#document-top-level
+     *
+     * @param array $response
+     * @param $self_link
+     * @return mixed
+     */
+    public static function makeResponseObject(array $response, $self_link = null)
+    {
+        $default_content = [
+            'jsonapi' => [
+                'version' => '1.0'
+            ]
+        ];
+
+        if (!is_null($self_link)) {
+            $default_content['links'] = [
+                'self' => $self_link
+            ];
+        }
+
+        return array_merge_recursive($default_content, $response);
+    }
 }

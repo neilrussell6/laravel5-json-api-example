@@ -18,25 +18,20 @@ $I->wantTo("make an error object for JSON API response");
 //-----------------------------------------------------
 
 $I->comment("given 2 empty messages & no status arg");
-
 $error_messages = [[], []];
-
 $result = JsonApiUtils::makeErrorObject($error_messages);
 
 //-----------------------------------------------------
 
 $I->expect("should return an array of error objects");
-
 $I->seeJsonPathType($result, '$.', 'array:!empty');
 
 //-----------------------------------------------------
 
 $I->expect("should return 422 status member for each error object if non is provided in each message");
-
 $I->seeJsonPathSame($result, '$.[*].status', HttpCode::UNPROCESSABLE_ENTITY);
 
 $I->expect("should not add optional members if no values are provided");
-
 $I->seeNotJSONPath($result, '$.[*].id');
 $I->seeNotJSONPath($result, '$.[*].links');
 $I->seeNotJSONPath($result, '$.[*].about');
@@ -52,15 +47,12 @@ $I->seeNotJSONPath($result, '$.[*].parameter');
 //-----------------------------------------------------
 
 $I->comment("2 empty messages & status arg");
-
 $error_messages = [[], []];
-
 $result = JsonApiUtils::makeErrorObject($error_messages, HttpCode::UNAUTHORIZED);
 
 //-----------------------------------------------------
 
 $I->expect("should return status argument for each error object if non is provided in each message");
-
 $I->seeJsonPathSame($result, '$.[*].status', HttpCode::UNAUTHORIZED);
 
 //-----------------------------------------------------
@@ -68,7 +60,6 @@ $I->seeJsonPathSame($result, '$.[*].status', HttpCode::UNAUTHORIZED);
 //-----------------------------------------------------
 
 $I->comment("2 messages with statuses & status arg");
-
 $error_messages = [
     [
         'status' => HttpCode::BAD_GATEWAY,
