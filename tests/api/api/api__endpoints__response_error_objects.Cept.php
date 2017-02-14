@@ -14,7 +14,7 @@ $I = new ApiTester($scenario);
 ///////////////////////////////////////////////////////
 
 // ----------------------------------------------------
-// 1) Endpoint Not found
+// 1) Unknown endpoint
 // ----------------------------------------------------
 
 $I->comment("when we make a request that results in an 404 error (unknown endpoint)");

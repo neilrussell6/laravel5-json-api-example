@@ -1,6 +1,8 @@
 <?php namespace Helper;
 
-class Acceptance extends \Codeception\Module
+use Codeception\Module;
+
+class Acceptance extends Module
 {
 
 }

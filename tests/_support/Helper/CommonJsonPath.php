@@ -4,7 +4,7 @@ use Codeception\Util\JsonArray;
 use Codeception\Util\JsonType;
 use Flow\JSONPath\JSONPath;
 
-class BaseHelper extends \Codeception\Module
+trait CommonJsonPath
 {
     //-----------------------------------
     // JSON Path

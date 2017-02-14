@@ -1,31 +1,31 @@
 <?php namespace Helper;
 
+use Codeception\Module;
 use Flow\JSONPath\JSONPath;
 
-class Api extends BaseHelper
+class Api extends Module
 {
+    use CommonJsonPath;
+    
     //-----------------------------------
     // HTTP
     //-----------------------------------
 
-    public function sendGET($endpoint)
+    public function sendMultiple($requests, $callback)
     {
-        $this->getModule('Laravel5')->_request('GET', $endpoint);
-    }
+        $module = $this->moduleContainer->getModule('REST');
 
-    public function sendPOST($endpoint, $data)
-    {
-        $this->getModule('Laravel5')->_request('POST', $endpoint, $data);
-    }
+        array_map(function ($request) use ($module, $callback) {
+            
+            switch ($request[0]) {
+                case 'GET': $module->sendGET($request[1]); break;
+                case 'POST': $module->sendPOST($request[1], $request[2]); break;
+                case 'PATCH': $module->sendPATCH($request[1], $request[2]); break;
+                case 'DELETE': $module->sendDELETE($request[1]); break;
+            }
 
-    public function sendPATCH($endpoint, $data)
-    {
-        $this->getModule('Laravel5')->_request('PATCH', $endpoint, $data);
-    }
-
-    public function sendDELETE($endpoint, $data)
-    {
-        $this->getModule('Laravel5')->_request('DELETE', $endpoint, $data);
+            $callback($request);
+        }, $requests);
     }
 
     //-----------------------------------

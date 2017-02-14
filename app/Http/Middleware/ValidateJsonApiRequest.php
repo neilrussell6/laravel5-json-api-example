@@ -2,6 +2,7 @@
 
 use App\Utils\JsonApiUtils;
 use Closure;
+use Illuminate\Http\Request;
 
 class ValidateJsonApiRequest
 {
@@ -12,7 +13,7 @@ class ValidateJsonApiRequest
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         $errors = [];
         $error_code = null;

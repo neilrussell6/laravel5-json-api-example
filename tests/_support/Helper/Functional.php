@@ -1,8 +1,8 @@
 <?php namespace Helper;
 
-use Flow\JSONPath\JSONPath;
+use Codeception\Module;
 
-class Functional extends BaseHelper
+class Functional extends Module
 {
 
 }
