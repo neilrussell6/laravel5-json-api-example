@@ -28,9 +28,11 @@ $factory->define(User::class, function (Faker\Generator $faker) {
 
 $factory->define(Project::class, function (Faker\Generator $faker) {
 
+    static $status;
+
     return [
         'name' => $faker->words(3, true),
-        'status' => $faker->numberBetween(1, 3),
+        'status' => $status ?: $faker->numberBetween(1, 3),
     ];
 });
 

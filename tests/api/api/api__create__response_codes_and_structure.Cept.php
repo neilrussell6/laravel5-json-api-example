@@ -1,49 +1,32 @@
 <?php
 
-use App\Models\Project;
+use Codeception\Util\Fixtures;
+use Codeception\Util\HttpCode;
 
 $I = new ApiTester($scenario);
 
 ///////////////////////////////////////////////////////
 //
-// before
+// Test
+//
+// * create resource
+// * test response codes & structure
 //
 ///////////////////////////////////////////////////////
 
-$projects = factory(Project::class, 10)->create();
-
-$I->comment("given 10 projects");
-$I->assertSame(10, Project::all()->count());
-
-$project_ids = $projects->pluck('id')->all();
-$project_1_id = $project_ids[0];
-
-///////////////////////////////////////////////////////
-//
-// Test (general API)
-//
-// * single resource responses
-// * response resource objects
-//
-///////////////////////////////////////////////////////
-
-$I->comment("when we make a request that results in a single entity (view, store, update)");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
 
-$project_data = [
-    'data' => [
-        'type' => 'projects',
-        'attributes' => [
-            'name' => "AAA"
-        ]
-    ]
-];
+// ====================================================
+// create resource
+// ====================================================
+
+$I->comment("when we create a resource");
 
 $requests = [
-    [ 'GET', "/api/projects/{$project_1_id}" ],
-    [ 'POST', "/api/projects", $project_data ],
-    [ 'PATCH', "/api/projects/{$project_1_id}", $project_data ],
+    [ 'POST', '/api/users', Fixtures::get('user') ],
+    [ 'POST', '/api/projects', Fixtures::get('project') ],
+    [ 'POST', '/api/tasks', Fixtures::get('task') ],
 ];
 
 $I->sendMultiple($requests, function($request) use ($I) {
@@ -51,7 +34,21 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->comment("given we make a {$request[0]} request to {$request[1]}");
 
     // ----------------------------------------------------
-    // 1) id & type
+    // 1) create resource -> 201 Created
+    //
+    // Specs:
+    // "the server MUST return either a 201 Created status
+    // code and response document (as described above) or
+    // a 204 No Content status code with no response
+    // document."
+    //
+    // ----------------------------------------------------
+
+    $I->expect("should return 201 HTTP code");
+    $I->seeResponseCodeIs(HttpCode::CREATED);
+
+    // ----------------------------------------------------
+    // 2) id & type
     //
     // Specs:
     // "A resource object MUST contain ... id."
@@ -59,14 +56,14 @@ $I->sendMultiple($requests, function($request) use ($I) {
     //
     // ----------------------------------------------------
 
-    $I->expect("should return type value for resource object");
-    $I->seeResponseJsonPathSame('$.data.type', 'projects');
-
     $I->expect("should return id for resource object as string");
     $I->seeResponseJsonPathType('$.data.id', 'string:!empty');
 
+    $I->expect("should return type for resource object as string");
+    $I->seeResponseJsonPathType('$.data.type', 'string:!empty');
+
     // ----------------------------------------------------
-    // 2) attributes
+    // 3) attributes
     //
     // Specs:
     // "a resource object MAY contain ... attributes: an
@@ -75,13 +72,36 @@ $I->sendMultiple($requests, function($request) use ($I) {
     //
     // ----------------------------------------------------
 
-    $I->expect("should return an attributes object, containing the entity's visible properties");
+    $I->expect("should return an attributes object");
     $I->seeResponseJsonPathType('$.data.attributes', 'array:!empty');
-    $I->seeResponseJsonPathType('$.data.attributes.name', 'string:!empty');
-    $I->seeResponseJsonPathType('$.data.attributes.status', 'integer');
 
     // ----------------------------------------------------
-    // 3) attributes (has one ids)
+    // 4) attributes (id & type)
+    //
+    // Specs:
+    // "a resource can not have ... an attribute or
+    // relationship named type or id"
+    //
+    // ----------------------------------------------------
+
+    // TODO: implement
+//    $I->expect("attributes object should not include type or id");
+//    $I->seeNotResponseJsonPath('$.data.attributes.type');
+//    $I->seeNotResponseJsonPath('$.data.attributes.id');
+
+    // ----------------------------------------------------
+    // 5) attributes (same name)
+    //
+    // Specs:
+    // "a resource can not have an attribute and
+    // relationship with the same name."
+    //
+    // ----------------------------------------------------
+
+    // TODO: test
+
+    // ----------------------------------------------------
+    // 6) attributes (foreign keys)
     //
     // Specs:
     // "Although has-one foreign keys (e.g. author_id) are
@@ -94,7 +114,7 @@ $I->sendMultiple($requests, function($request) use ($I) {
     // TODO: test
 
     // ----------------------------------------------------
-    // 4) relationships
+    // 7) relationships
     //
     // Specs:
     // "a resource object MAY contain ...
@@ -107,7 +127,7 @@ $I->sendMultiple($requests, function($request) use ($I) {
     // TODO: test
 
     // ----------------------------------------------------
-    // 4) links
+    // 8) links
     //
     // Specs:
     // "a resource object MAY contain ...
@@ -118,10 +138,10 @@ $I->sendMultiple($requests, function($request) use ($I) {
 
     $I->expect("should return a links object containing only a self property");
     $I->seeResponseJsonPathType('$.data.links', 'array:!empty');
-    $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/projects\/\d+$/');
+    $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+$/');
 
     // ----------------------------------------------------
-    // 5) meta
+    // 9) meta
     //
     // Specs:
     // "a resource object MAY contain ...

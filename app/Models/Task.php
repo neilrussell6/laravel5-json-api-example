@@ -11,7 +11,7 @@ class Task extends Model
     const STATUS_COMPLETE   = 2;
     const STATUS_TRASH      = 3;
 
-    protected $fillable     = ['name', 'status'];
+    protected $fillable     = ['name', 'project_id', 'status'];
     protected $hidden       = [];
     protected $casts        = [
         'status' => 'integer',

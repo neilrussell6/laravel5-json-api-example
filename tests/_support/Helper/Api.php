@@ -16,7 +16,7 @@ class Api extends Module
         $module = $this->moduleContainer->getModule('REST');
 
         array_map(function ($request) use ($module, $callback) {
-            
+
             switch ($request[0]) {
                 case 'GET': $module->sendGET($request[1]); break;
                 case 'POST': $module->sendPOST($request[1], $request[2]); break;

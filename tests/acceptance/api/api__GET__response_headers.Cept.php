@@ -6,7 +6,9 @@ $I = new AcceptanceTester($scenario);
 
 ///////////////////////////////////////////////////////
 //
-// Test general API response headers
+// Test
+//
+// * test response headers
 //
 ///////////////////////////////////////////////////////
 
@@ -20,7 +22,7 @@ $I = new AcceptanceTester($scenario);
 // Laravel5 Codeception module we use in the API tests.
 
 // ----------------------------------------------------
-// 1) Response headers: Content-Type
+// 1) Content-Type response headers
 //
 // Specs:
 // "Servers MUST send all JSON API data in response
@@ -32,7 +34,9 @@ $I = new AcceptanceTester($scenario);
 
 $I->comment("when we make a GET request to the api");
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
+
 $I->sendGET('/api');
+// TODO: test other methods & endpoints
 
 $I->expect("should return Content-Type: application/vnd.api+json header without any media type parameters");
 $I->seeHttpHeader('Content-Type', 'application/vnd.api+json');

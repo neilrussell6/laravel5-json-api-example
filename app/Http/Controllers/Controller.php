@@ -79,14 +79,9 @@ class Controller extends BaseController
 
         $request_data_validation = $this->validateRequestData($request_data, $request->fullUrl());
 
-        // respond with error
+        // respond with errors
         if (!empty($request_data_validation['errors'])) {
-
-            $content = JsonApiUtils::makeResponseObject([
-                'errors' => $request_data_validation['errors']
-            ], $request->fullUrl());
-
-            return response($content, $request_data_validation['error_code']);
+            return response([ 'errors' => $request_data_validation['errors'] ], $request_data_validation['error_code']);
         }
 
         // create & find resource
@@ -111,12 +106,7 @@ class Controller extends BaseController
 
         // respond with error
         if (!empty($request_data_validation['errors'])) {
-
-            $content = JsonApiUtils::makeResponseObject([
-                'errors' => $request_data_validation['errors']
-            ], $request->fullUrl());
-
-            return response($content, $request_data_validation['error_code']);
+            return response([ 'errors' => $request_data_validation['errors'] ], $request_data_validation['error_code']);
         }
 
         // find & update resource
@@ -127,6 +117,17 @@ class Controller extends BaseController
         // return updated resource
         return Response::item($request, $resource->toArray(), $this->model->type, 200);
     }
+
+//    /**
+//     * deletes the target resource item.
+//     * returns either: deletion error or success message.
+//     *
+//     * @param Request $request
+//     * @return mixed
+//     */
+//    public function destroy(Request $request, $id)
+//    {
+//    }
 
     // ----------------------------------------------------
     // utils
