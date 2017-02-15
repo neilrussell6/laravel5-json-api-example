@@ -23,9 +23,15 @@ class BuildJsonApiResponse
             return $response;
         }
 
-        // make response content and update response
-        $content = JsonApiUtils::makeResponseObject($response->getOriginalContent(), $request->fullUrl());
-        $response->setContent($content);
+        $original_content = $response->getOriginalContent();
+
+        if (!is_null($original_content)) {
+
+            // make response content and update response
+            $content = JsonApiUtils::makeResponseObject($original_content, $request->fullUrl());
+            $response->setContent($content);
+        }
+
         $response->header('Content-Type', 'application/vnd.api+json');
 
         return $response;

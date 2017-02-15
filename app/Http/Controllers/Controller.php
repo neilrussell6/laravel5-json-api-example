@@ -118,16 +118,20 @@ class Controller extends BaseController
         return Response::item($request, $resource->toArray(), $this->model->type, 200);
     }
 
-//    /**
-//     * deletes the target resource item.
-//     * returns either: deletion error or success message.
-//     *
-//     * @param Request $request
-//     * @return mixed
-//     */
-//    public function destroy(Request $request, $id)
-//    {
-//    }
+    /**
+     * deletes the target resource item.
+     * returns either: deletion error or no content.
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function destroy(Request $request, $id)
+    {
+        $this->model->destroy($id);
+
+        // return no content
+        return response([], 204);
+    }
 
     // ----------------------------------------------------
     // utils
