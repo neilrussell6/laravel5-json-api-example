@@ -67,10 +67,9 @@ $I->expect("should return correct attributes for the entity");
 $I->seeResponseJsonPathType('$.data.attributes.name', 'string:!empty');
 $I->seeResponseJsonPathType('$.data.attributes.email', 'string:!empty');
 
-// TODO: implement
-//$I->expect("attributes object should not include type or id");
-//$I->seeNotResponseJsonPath('$.data.attributes.type');
-//$I->seeNotResponseJsonPath('$.data.attributes.id');
+$I->expect("attributes object should not include type or id");
+$I->seeNotResponseJsonPath('$.data.attributes.type');
+$I->seeNotResponseJsonPath('$.data.attributes.id');
 
 // ----------------------------------------------------
 // 3) links
@@ -124,10 +123,9 @@ $I->seeResponseJsonPathType('$.data.attributes.name', 'string:!empty');
 $I->expect("attributes object should include all those set during creation, even if they were not not included in request");
 $I->seeResponseJsonPathSame('$.data.attributes.status', Project::STATUS_INCOMPLETE);
 
-// TODO: implement
-//$I->expect("attributes object should not include type or id");
-//$I->seeNotResponseJsonPath('$.data.attributes.type');
-//$I->seeNotResponseJsonPath('$.data.attributes.id');
+$I->expect("attributes object should not include type or id");
+$I->seeNotResponseJsonPath('$.data.attributes.type');
+$I->seeNotResponseJsonPath('$.data.attributes.id');
 
 // ----------------------------------------------------
 // 3) links
@@ -181,14 +179,12 @@ $I->seeResponseJsonPathType('$.data.attributes.name', 'string:!empty');
 $I->expect("attributes object should include all those set during creation, even if they were not not included in request");
 $I->seeResponseJsonPathSame('$.data.attributes.status', Project::STATUS_INCOMPLETE);
 
-// TODO: implement
-//$I->expect("attributes object should not include type or id");
-//$I->seeNotResponseJsonPath('$.data.attributes.type');
-//$I->seeNotResponseJsonPath('$.data.attributes.id');
+$I->expect("attributes object should not include type or id");
+$I->seeNotResponseJsonPath('$.data.attributes.type');
+$I->seeNotResponseJsonPath('$.data.attributes.id');
 
-// TODO: implement
-//$I->expect("attributes object should not include any foreign keys");
-//$I->seeNotResponseJsonPath('$.data.attributes.project_id');
+$I->expect("attributes object should not include any foreign keys");
+$I->seeNotResponseJsonPath('$.data.attributes.project_id');
 
 // ----------------------------------------------------
 // 3) links

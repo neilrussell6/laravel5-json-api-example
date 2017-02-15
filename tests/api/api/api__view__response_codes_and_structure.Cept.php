@@ -112,10 +112,9 @@ $I->sendMultiple($requests, function($request) use ($I) {
     //
     // ----------------------------------------------------
 
-    // TODO: implement
-//    $I->expect("attributes object should not include type or id");
-//    $I->seeNotResponseJsonPath('$.data.attributes.type');
-//    $I->seeNotResponseJsonPath('$.data.attributes.id');
+    $I->expect("attributes object should not include type or id");
+    $I->seeNotResponseJsonPath('$.data.attributes.type');
+    $I->seeNotResponseJsonPath('$.data.attributes.id');
 
     // ----------------------------------------------------
     // 5) attributes (same name)

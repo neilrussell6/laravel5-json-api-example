@@ -1,5 +1,6 @@
 <?php namespace App\Utils;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
@@ -21,10 +22,17 @@ class JsonApiUtils
      */
     public static function makeResourceObject($data, $type, $link_self)
     {
+        $collection = new Collection($data);
+
+        // don't include type, id or foreign keys in attributes
+        $filtered_collection = $collection->filter(function($item, $key) {
+            return !in_array($key, ['id', 'type']) && preg_match('/(.*?)\_id$/', $key) !== 1;
+        });
+
         return [
             'id'            => strval($data['id']),
             'type'          => $type,
-            'attributes'    => $data,
+            'attributes'    => $filtered_collection->toArray(),
             'links' => [
                 'self' => $link_self
             ],
