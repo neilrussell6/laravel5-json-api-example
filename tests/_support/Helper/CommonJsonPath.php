@@ -111,6 +111,8 @@ trait CommonJsonPath
             $json_array = $json_array->filterByJsonPath($json_path);
         }
 
+        $this->assertNotEmpty($json_array, "JSON is empty");
+
         // ensure each item is an array for comparison
         $json_array = array_map(function($item) {
             return [ $item ];

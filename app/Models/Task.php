@@ -21,6 +21,8 @@ class Task extends Model
     public $rules = [
         'name' => 'required'
     ];
+    public $available_includes = ['users', 'projects'];
+    public $default_includes = ['projects'];
 
     public function projects()
     {

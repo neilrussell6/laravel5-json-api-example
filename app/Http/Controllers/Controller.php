@@ -50,7 +50,7 @@ class Controller extends BaseController
         $pagination_options = $this->makePaginationOptions($request);
         $paginator = $this->model->paginate($pagination_options['limit'], ['*'], "page['offset']", $pagination_options['offset']);
 
-        return Response::pagination($request, $paginator, $this->model->type, 200);
+        return Response::pagination($request, $paginator, $this->model, 200);
     }
 
     /**
@@ -63,7 +63,7 @@ class Controller extends BaseController
     public function show(Request $request, $id)
     {
         $resource = $this->model->findOrFail($id);
-        return Response::item($request, $resource, $this->model->type, 200);
+        return Response::item($request, $resource, $this->model, 200);
     }
 
     /**
@@ -89,7 +89,7 @@ class Controller extends BaseController
         $resource = $this->model->findOrFail($result->id);
 
         // return newly created resource
-        return Response::item($request, $resource->toArray(), $this->model->type, 201);
+        return Response::item($request, $resource->toArray(), $this->model, 201);
     }
 
     /**
@@ -115,7 +115,7 @@ class Controller extends BaseController
         $resource->save();
 
         // return updated resource
-        return Response::item($request, $resource->toArray(), $this->model->type, 200);
+        return Response::item($request, $resource->toArray(), $this->model, 200);
     }
 
     /**

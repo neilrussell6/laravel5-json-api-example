@@ -132,21 +132,7 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+$/');
 
     // ----------------------------------------------------
-    // 8) relationships
-    //
-    // Specs:
-    // "a resource object MAY contain ...
-    // relationships: a relationships object describing
-    // relationships between the resource and other JSON
-    // API resources."
-    //
-    // ----------------------------------------------------
-
-    $I->expect("should not return relationships for any entities");
-    $I->seeNotResponseJsonPath('$.data.relationships');
-
-    // ----------------------------------------------------
-    // 9) meta
+    // 8) meta
     //
     // Specs:
     // "a resource object MAY contain ...
@@ -158,5 +144,29 @@ $I->sendMultiple($requests, function($request) use ($I) {
 
     $I->expect("should not return meta for any entities");
     $I->seeNotResponseJsonPath('$.data.meta');
+
+    // ----------------------------------------------------
+    // 9) relationships
+    //
+    // Specs:
+    // "a resource object MAY contain ...
+    // relationships: a relationships object describing
+    // relationships between the resource and other JSON
+    // API resources."
+    //
+    // ----------------------------------------------------
+
+    $I->expect("should return a relationships object for entity");
+    $I->seeResponseJsonPathType('$.data.links', 'array:!empty');
+    $I->seeResponseJsonPathType('$.data.relationships', 'array:!empty');
+
+    // ... links
+
+    $I->expect("should return links for each relationship");
+    $I->seeResponseJsonPathType('$.data.relationships[*].links', 'array:!empty');
+
+    $I->expect("should return self & related links");
+    $I->seeResponseJsonPathRegex('$.data.relationships[*].links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+\/relationships\/\w+$/');
+    $I->seeResponseJsonPathRegex('$.data.relationships[*].links.related', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+\/\w+$/');
 
 });

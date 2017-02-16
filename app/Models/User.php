@@ -18,6 +18,8 @@ class User extends Authenticatable
         'email' => 'required|email|unique:users',
         'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/|confirmed',
     ];
+    public $available_includes = ['projects', 'tasks'];
+    public $default_includes = ['projects'];
 
     public function projects($fields = [])
     {

@@ -15,15 +15,15 @@ class ResponseServiceProvider extends ServiceProvider
      */
     public function boot(ResponseFactory $factory)
     {
-        $factory->macro('item', function (Request $request, $data, $type, $status = 200) use ($factory) {
+        $factory->macro('item', function (Request $request, $data, $model, $status = 200) use ($factory) {
             $full_url = $request->fullUrl();
-            return $factory->make(JsonApiResponseMacroUtils::makeItemResponse($data, $type, $full_url), $status);
+            return $factory->make(JsonApiResponseMacroUtils::makeItemResponse($data, $model, $full_url), $status);
         });
 
-        $factory->macro('pagination', function (Request $request, LengthAwarePaginator $paginator, $type, $status = 200) use ($factory) {
+        $factory->macro('pagination', function (Request $request, LengthAwarePaginator $paginator, $model, $status = 200) use ($factory) {
             $base_url = $request->url();
             $query_params = $request->query();
-            return $factory->make(JsonApiResponseMacroUtils::makePaginationResponse($paginator, $type, $base_url, $query_params), $status);
+            return $factory->make(JsonApiResponseMacroUtils::makePaginationResponse($paginator, $model, $base_url, $query_params), $status);
         });
     }
 

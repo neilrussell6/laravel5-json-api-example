@@ -1,5 +1,6 @@
 <?php namespace App\Utils;
 
+use App\Models\Task;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -12,15 +13,31 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class JsonApiUtils
 {
     /**
+     * creates a relationship object for JSON API formatted response
+     *
+     * @param $name
+     * @param $link_self
+     * @return array
+     */
+    public static function makeRelationshipObject($name, $link_self) {
+        return [
+            'links' => [
+                'self' => "{$link_self}/relationships/{$name}",
+                'related' => "{$link_self}/{$name}",
+            ]
+        ];
+    }
+
+    /**
      * creates a resource object for JSON API formatted response
      * http://jsonapi.org/format/#document-resource-objects
      *
      * @param array $data
-     * @param $type
+     * @param $model
      * @param $link_self
      * @return array
      */
-    public static function makeResourceObject($data, $type, $link_self)
+    public static function makeResourceObject($data, $model, $link_self, $include_relationships = true)
     {
         $collection = new Collection($data);
 
@@ -29,14 +46,38 @@ class JsonApiUtils
             return !in_array($key, ['id', 'type']) && preg_match('/(.*?)\_id$/', $key) !== 1;
         });
 
-        return [
+        // relationships
+        $relationships = [];
+        if ($include_relationships && property_exists($model, 'default_includes') && !empty($model->default_includes)) {
+
+            // build relationships objects
+            $relationships = array_reduce($model->default_includes, function ($carry, $default_include) use ($link_self) {
+                return array_merge($carry, [ $default_include => self::makeRelationshipObject($default_include, $link_self) ]);
+            }, []);
+
+            // get relationship data
+//            array_map(function ($default_include) use ($data, $model) {
+//                if (method_exists($model, $default_include)) {
+//                    $relationship_data = $data->$default_include()->get()->toArray();
+//                    var_dump($relationship_data);
+//                }
+//            }, $model->default_includes);
+        }
+
+        $result = [
             'id'            => strval($data['id']),
-            'type'          => $type,
+            'type'          => $model->type,
             'attributes'    => $filtered_collection->toArray(),
             'links' => [
                 'self' => $link_self
             ],
         ];
+
+        if (!empty($relationships)) {
+            $result = array_merge($result, [ 'relationships' => $relationships ]);
+        }
+
+        return $result;
     }
 
     /**
@@ -44,6 +85,8 @@ class JsonApiUtils
      * http://jsonapi.org/format/#fetching-pagination
      *
      * @param LengthAwarePaginator $paginator
+     * @param $base_url
+     * @param $query_params
      * @return array
      */
     public static function makePaginationLinksObject(LengthAwarePaginator $paginator, $base_url, $query_params)

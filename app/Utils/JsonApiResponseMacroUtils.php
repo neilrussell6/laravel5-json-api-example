@@ -14,11 +14,11 @@ class JsonApiResponseMacroUtils
      * make item response
      *
      * @param $data
-     * @param $type
+     * @param $model
      * @param $full_url
      * @return array
      */
-    public static function makeItemResponse ($data, $type, $full_url)
+    public static function makeItemResponse ($data, $model, $full_url)
     {
         // add id to self link if it is not already there
         $url_parts = parse_url($full_url);
@@ -26,7 +26,7 @@ class JsonApiResponseMacroUtils
         $link_self = http_build_url($url_parts);
 
         return [
-            'data' => JsonApiUtils::makeResourceObject($data, $type, $link_self)
+            'data' => JsonApiUtils::makeResourceObject($data, $model, $link_self)
         ];
     }
 
@@ -34,18 +34,19 @@ class JsonApiResponseMacroUtils
      * make pagination response
      *
      * @param LengthAwarePaginator $paginator
-     * @param $type
+     * @param $model
      * @param $base_url
      * @param $query_params
      * @return array
      */
-    public static function makePaginationResponse (LengthAwarePaginator $paginator, $type, $base_url, $query_params)
+    public static function makePaginationResponse (LengthAwarePaginator $paginator, $model, $base_url, $query_params)
     {
         return [
             'links' => JsonApiUtils::makePaginationLinksObject($paginator, $base_url, $query_params),
             'meta' => JsonApiUtils::makePaginationMetaObject($paginator),
-            'data' => array_map(function($item) use ($type, $base_url) {
-                return JsonApiUtils::makeResourceObject($item, $type, "{$base_url}/{$item['id']}");
+            'data' => array_map(function($item) use ($model, $base_url) {
+                $include_relationships = false;
+                return JsonApiUtils::makeResourceObject($item, $model, "{$base_url}/{$item['id']}", $include_relationships);
             }, $paginator->toArray()['data'])
         ];
     }

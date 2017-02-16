@@ -175,7 +175,7 @@ $I->sendMultiple($requests, function($request) use ($I) {
     //
     // ----------------------------------------------------
 
-    $I->expect("should not return relationships for any entities");
+    $I->expect("should not return relationships for any entities in an index request");
     $I->seeNotResponseJsonPath('$.data[*].relationships');
 
 });

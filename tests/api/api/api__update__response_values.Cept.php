@@ -80,16 +80,27 @@ $I->seeResponseJsonPathType('$.data.links', 'array:!empty');
 $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/users\/1$/');
 
 // ----------------------------------------------------
-// 4) meta
+// 4) relationships
 // ----------------------------------------------------
 
-// TODO: test
+// ... tasks
 
-// ----------------------------------------------------
-// 5) relationships
-// ----------------------------------------------------
+$I->expect("should not return a 'tasks' relationship (because it is not a 'default include')");
+$I->seeNotResponseJsonPath('$.data.relationships.tasks');
 
-// TODO: test
+// ... projects
+
+$I->expect("should return a 'projects' relationship");
+$I->seeResponseJsonPathType('$.data.relationships.projects', 'array:!empty');
+
+// ... projects ... links
+
+$I->expect("should return links for 'projects' relationship");
+$I->seeResponseJsonPathType('$.data.relationships.projects.links', 'array:!empty');
+
+$I->expect("should return self & related links for 'projects' relationship");
+$I->seeResponseJsonPathRegex('$.data.relationships.projects.links.self', '/^http\:\/\/[^\/]+\/api\/users\/\d+\/relationships\/projects/');
+$I->seeResponseJsonPathRegex('$.data.relationships.projects.links.related', '/^http\:\/\/[^\/]+\/api\/users\/\d+\/projects/');
 
 // ====================================================
 // update project
@@ -136,16 +147,27 @@ $I->seeResponseJsonPathType('$.data.links', 'array:!empty');
 $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/projects\/1$/');
 
 // ----------------------------------------------------
-// 4) meta
+// 4) relationships
 // ----------------------------------------------------
 
-// TODO: test
+// ... users
 
-// ----------------------------------------------------
-// 5) relationships
-// ----------------------------------------------------
+$I->expect("should not return a 'users' relationship (because it is not a 'default include')");
+$I->seeNotResponseJsonPath('$.data.relationships.users');
 
-// TODO: test
+// ... tasks
+
+$I->expect("should return a 'tasks' relationship");
+$I->seeResponseJsonPathType('$.data.relationships.tasks', 'array:!empty');
+
+// ... tasks ... links
+
+$I->expect("should return links for 'tasks' relationship");
+$I->seeResponseJsonPathType('$.data.relationships.tasks.links', 'array:!empty');
+
+$I->expect("should return self & related links for 'tasks' relationship");
+$I->seeResponseJsonPathRegex('$.data.relationships.tasks.links.self', '/^http\:\/\/[^\/]+\/api\/projects\/\d+\/relationships\/tasks/');
+$I->seeResponseJsonPathRegex('$.data.relationships.tasks.links.related', '/^http\:\/\/[^\/]+\/api\/projects\/\d+\/tasks/');
 
 // ====================================================
 // update task
@@ -198,4 +220,21 @@ $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/task
 // 4) relationships
 // ----------------------------------------------------
 
-// TODO: test relationships response
+// ... users
+
+$I->expect("should not return a 'users' relationship (because it is not a 'default include')");
+$I->seeNotResponseJsonPath('$.data.relationships.users');
+
+// ... projects
+
+$I->expect("should return a 'projects' relationship");
+$I->seeResponseJsonPathType('$.data.relationships.projects', 'array:!empty');
+
+// ... projects ... links
+
+$I->expect("should return links for 'projects' relationship");
+$I->seeResponseJsonPathType('$.data.relationships.projects.links', 'array:!empty');
+
+$I->expect("should return self & related links for 'projects' relationship");
+$I->seeResponseJsonPathRegex('$.data.relationships.projects.links.self', '/^http\:\/\/[^\/]+\/api\/tasks\/\d+\/relationships\/projects/');
+$I->seeResponseJsonPathRegex('$.data.relationships.projects.links.related', '/^http\:\/\/[^\/]+\/api\/tasks\/\d+\/projects/');

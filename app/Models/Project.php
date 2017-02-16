@@ -21,10 +21,12 @@ class Project extends Model
     public $rules = [
         'name' => 'required'
     ];
+    public $available_includes = ['users', 'tasks'];
+    public $default_includes = ['tasks'];
 
     public function tasks()
     {
-        return $this->belongsToMany('App\Models\Task');
+        return $this->hasMany('App\Models\Task');
     }
 
     public function users()
