@@ -72,30 +72,16 @@ $I->expect("should return correct attributes for each entity");
 $I->seeResponseJsonPathType('$.data[*].attributes.name', 'string:!empty');
 $I->seeResponseJsonPathType('$.data[*].attributes.email', 'string:!empty');
 
+$I->expect("attributes object should not include type or id");
+$I->seeNotResponseJsonPath('$.data[*].attributes.type');
+$I->seeNotResponseJsonPath('$.data[*].attributes.id');
+
 // ----------------------------------------------------
 // 3) links
 // ----------------------------------------------------
 
 $I->expect("should return correct self link for each entity");
 $I->seeResponseJsonPathRegex('$.data[*].links.self', '/^http\:\/\/[^\/]+\/api\/users\/\d+$/');
-
-// ----------------------------------------------------
-// 4) meta
-// ----------------------------------------------------
-
-// TODO: test
-
-// ----------------------------------------------------
-// 5) attributes (has one ids)
-// ----------------------------------------------------
-
-// TODO: test
-
-// ----------------------------------------------------
-// 6) relationships
-// ----------------------------------------------------
-
-// TODO: test
 
 // ====================================================
 // index projects

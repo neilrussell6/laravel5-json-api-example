@@ -110,23 +110,15 @@ $I->sendMultiple($requests, function($request) use ($I) {
     //
     // ----------------------------------------------------
 
-    // TODO: test
+    $I->expect("attributes object should not include any foreign keys");
+    $attributes = $I->grabResponseJsonPath('$.data[*].attributes');
+    $unique_attributes = array_reduce($attributes, function ($carry, $obj) {
+        return array_unique(array_merge($carry, array_keys($obj)));
+    }, []);
+    $I->assertNotContainsRegex('/(.*?)\_id$/', $unique_attributes);
 
     // ----------------------------------------------------
-    // 7) relationships
-    //
-    // Specs:
-    // "a resource object MAY contain ...
-    // relationships: a relationships object describing
-    // relationships between the resource and other JSON
-    // API resources."
-    //
-    // ----------------------------------------------------
-
-    // TODO: test
-
-    // ----------------------------------------------------
-    // 8) links
+    // 7) links
     //
     // Specs:
     // "a resource object MAY contain ...
@@ -140,6 +132,20 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+$/');
 
     // ----------------------------------------------------
+    // 8) relationships
+    //
+    // Specs:
+    // "a resource object MAY contain ...
+    // relationships: a relationships object describing
+    // relationships between the resource and other JSON
+    // API resources."
+    //
+    // ----------------------------------------------------
+
+    $I->expect("should not return relationships for any entities");
+    $I->seeNotResponseJsonPath('$.data[*].relationships');
+
+    // ----------------------------------------------------
     // 9) meta
     //
     // Specs:
@@ -150,6 +156,7 @@ $I->sendMultiple($requests, function($request) use ($I) {
     //
     // ----------------------------------------------------
 
-    // TODO: test
+    $I->expect("should not return meta for any entities");
+    $I->seeNotResponseJsonPath('$.data[*].meta');
 
 });

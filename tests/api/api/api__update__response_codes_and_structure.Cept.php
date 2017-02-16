@@ -144,23 +144,15 @@ $I->sendMultiple($requests, function($request) use ($I) {
     //
     // ----------------------------------------------------
 
-    // TODO: test
+    $I->expect("attributes object should not include any foreign keys");
+    $attributes = $I->grabResponseJsonPath('$.data[*].attributes');
+    $unique_attributes = array_reduce($attributes, function ($carry, $obj) {
+        return array_unique(array_merge($carry, array_keys($obj)));
+    }, []);
+    $I->assertNotContainsRegex('/(.*?)\_id$/', $unique_attributes);
 
     // ----------------------------------------------------
-    // 7) relationships
-    //
-    // Specs:
-    // "a resource object MAY contain ...
-    // relationships: a relationships object describing
-    // relationships between the resource and other JSON
-    // API resources."
-    //
-    // ----------------------------------------------------
-
-    // TODO: test
-
-    // ----------------------------------------------------
-    // 8) links
+    // 7) links
     //
     // Specs:
     // "a resource object MAY contain ...
@@ -174,7 +166,7 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+$/');
 
     // ----------------------------------------------------
-    // 9) meta
+    // 8) meta
     //
     // Specs:
     // "a resource object MAY contain ...
@@ -185,4 +177,18 @@ $I->sendMultiple($requests, function($request) use ($I) {
     // ----------------------------------------------------
 
     // TODO: test
+
+    // ----------------------------------------------------
+    // 9) relationships
+    //
+    // Specs:
+    // "a resource object MAY contain ...
+    // relationships: a relationships object describing
+    // relationships between the resource and other JSON
+    // API resources."
+    //
+    // ----------------------------------------------------
+
+    // TODO: test relationships response
+
 });

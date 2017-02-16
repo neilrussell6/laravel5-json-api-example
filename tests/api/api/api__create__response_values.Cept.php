@@ -72,13 +72,14 @@ $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/user
 // 4) meta
 // ----------------------------------------------------
 
-// TODO: test
+$I->expect("should not return meta for any entities");
+$I->seeNotResponseJsonPath('$.data[*].meta');
 
 // ----------------------------------------------------
 // 5) relationships
 // ----------------------------------------------------
 
-// TODO: test
+// TODO: test relationship response
 
 // ====================================================
 // create project
@@ -121,13 +122,14 @@ $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/proj
 // 4) meta
 // ----------------------------------------------------
 
-// TODO: test
+$I->expect("should not return meta for any entities");
+$I->seeNotResponseJsonPath('$.data[*].meta');
 
 // ----------------------------------------------------
 // 5) relationships
 // ----------------------------------------------------
 
-// TODO: test
+// TODO: test relationship response
 
 // ====================================================
 // create task
@@ -170,13 +172,7 @@ $I->seeResponseJsonPathType('$.data.links', 'array:!empty');
 $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/tasks\/1$/');
 
 // ----------------------------------------------------
-// 4) meta
+// 4) relationships
 // ----------------------------------------------------
 
-// TODO: test
-
-// ----------------------------------------------------
-// 5) relationships
-// ----------------------------------------------------
-
-// TODO: test
+// TODO: test relationship response

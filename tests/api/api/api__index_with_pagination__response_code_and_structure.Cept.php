@@ -85,12 +85,16 @@ $I->sendMultiple($requests, function($request) use ($I) {
 
     $I->comment("given we make a {$request[0]} request to {$request[1]}");
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // response code
+    // ----------------------------------------------------
 
     $I->expect("should return 200 HTTP code");
     $I->seeResponseCodeIs(HttpCode::OK);
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // links
+    // ----------------------------------------------------
 
     $I->expect("should return pagination link urls for all, except 'prev' link");
     $I->seeResponseJsonPathType('$.links.first', 'string:!empty');
@@ -111,7 +115,9 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseJsonPathRegex('$.links.next', '/\?.*page\%5Boffset\%5D\=2/');
     $I->seeResponseJsonPathRegex('$.links.self', '/\?.*page\%5Boffset\%5D\=1/');
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // meta
+    // ----------------------------------------------------
 
     $I->expect("should return correct pagination meta");
     $I->seeResponseJsonPathSame('$.meta.pagination.count', 2);
@@ -120,7 +126,9 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseJsonPathSame('$.meta.pagination.total_items', 10);
     $I->seeResponseJsonPathSame('$.meta.pagination.total_pages', 5);
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // limit data
+    // ----------------------------------------------------
 
     $I->expect("should limit return data");
     $data = $I->grabResponseJsonPath('$.data[*]');
@@ -144,12 +152,16 @@ $I->sendMultiple($requests, function($request) use ($I) {
 
     $I->comment("given we make a {$request[0]} request to {$request[1]}");
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // response code
+    // ----------------------------------------------------
 
     $I->expect("should return 200 HTTP code");
     $I->seeResponseCodeIs(HttpCode::OK);
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // links
+    // ----------------------------------------------------
 
     $I->expect("should return pagination link urls for all links");
     $I->seeResponseJsonPathType('$.links.first', 'string:!empty');
@@ -172,7 +184,9 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseJsonPathRegex('$.links.prev', '/\?.*page\%5Boffset\%5D\=1/');
     $I->seeResponseJsonPathRegex('$.links.self', '/\?.*page\%5Boffset\%5D\=2/');
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // meta
+    // ----------------------------------------------------
 
     $I->expect("should return correct pagination meta");
     $I->seeResponseJsonPathSame('$.meta.pagination.count', 2);
@@ -181,7 +195,9 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseJsonPathSame('$.meta.pagination.total_items', 10);
     $I->seeResponseJsonPathSame('$.meta.pagination.total_pages', 5);
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // limit data
+    // ----------------------------------------------------
 
     $I->expect("should limit return data");
     $data = $I->grabResponseJsonPath('$.data[*]');
@@ -205,12 +221,16 @@ $I->sendMultiple($requests, function($request) use ($I) {
 
     $I->comment("given we make a {$request[0]} request to {$request[1]}");
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // response code
+    // ----------------------------------------------------
 
     $I->expect("should return 200 HTTP code");
     $I->seeResponseCodeIs(HttpCode::OK);
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // links
+    // ----------------------------------------------------
 
     $I->expect("should return pagination link urls for all links");
     $I->seeResponseJsonPathType('$.links.first', 'string:!empty');
@@ -233,7 +253,9 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseJsonPathRegex('$.links.prev', '/\?.*page\%5Boffset\%5D\=2/');
     $I->seeResponseJsonPathRegex('$.links.self', '/\?.*page\%5Boffset\%5D\=3/');
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // meta
+    // ----------------------------------------------------
 
     $I->expect("should return correct pagination meta");
     $I->seeResponseJsonPathSame('$.meta.pagination.count', 2);
@@ -242,7 +264,9 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseJsonPathSame('$.meta.pagination.total_items', 10);
     $I->seeResponseJsonPathSame('$.meta.pagination.total_pages', 5);
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // limit data
+    // ----------------------------------------------------
 
     $I->expect("should limit return data");
     $data = $I->grabResponseJsonPath('$.data[*]');
@@ -266,12 +290,16 @@ $I->sendMultiple($requests, function($request) use ($I) {
 
     $I->comment("given we make a {$request[0]} request to {$request[1]}");
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // response code
+    // ----------------------------------------------------
 
     $I->expect("should return 200 HTTP code");
     $I->seeResponseCodeIs(HttpCode::OK);
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // links
+    // ----------------------------------------------------
 
     $I->expect("should return pagination link urls for all links");
     $I->seeResponseJsonPathType('$.links.first', 'string:!empty');
@@ -294,7 +322,9 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseJsonPathRegex('$.links.prev', '/\?.*page\%5Boffset\%5D\=3/');
     $I->seeResponseJsonPathRegex('$.links.self', '/\?.*page\%5Boffset\%5D\=4/');
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // meta
+    // ----------------------------------------------------
 
     $I->expect("should return correct pagination meta");
     $I->seeResponseJsonPathSame('$.meta.pagination.count', 2);
@@ -303,7 +333,9 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseJsonPathSame('$.meta.pagination.total_items', 10);
     $I->seeResponseJsonPathSame('$.meta.pagination.total_pages', 5);
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // limit data
+    // ----------------------------------------------------
 
     $I->expect("should limit return data");
     $data = $I->grabResponseJsonPath('$.data[*]');
@@ -327,12 +359,16 @@ $I->sendMultiple($requests, function($request) use ($I) {
 
     $I->comment("given we make a {$request[0]} request to {$request[1]}");
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // response code
+    // ----------------------------------------------------
 
     $I->expect("should return 200 HTTP code");
     $I->seeResponseCodeIs(HttpCode::OK);
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // links
+    // ----------------------------------------------------
 
     $I->expect("should return pagination link urls for all links, except 'next' link");
     $I->seeResponseJsonPathType('$.links.first', 'string:!empty');
@@ -353,7 +389,9 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseJsonPathRegex('$.links.prev', '/\?.*page\%5Boffset\%5D\=4/');
     $I->seeResponseJsonPathRegex('$.links.self', '/\?.*page\%5Boffset\%5D\=5/');
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // meta
+    // ----------------------------------------------------
 
     $I->expect("should return correct pagination meta");
     $I->seeResponseJsonPathSame('$.meta.pagination.count', 2);
@@ -362,7 +400,9 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseJsonPathSame('$.meta.pagination.total_items', 10);
     $I->seeResponseJsonPathSame('$.meta.pagination.total_pages', 5);
 
-    //-----------------------------------------------------
+    // ----------------------------------------------------
+    // limit data
+    // ----------------------------------------------------
 
     $I->expect("should limit return data");
     $data = $I->grabResponseJsonPath('$.data[*]');

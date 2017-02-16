@@ -193,13 +193,7 @@ $I->seeResponseJsonPathType('$.data.links', 'array:!empty');
 $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/tasks\/1$/');
 
 // ----------------------------------------------------
-// 4) meta
+// 4) relationships
 // ----------------------------------------------------
 
-// TODO: test
-
-// ----------------------------------------------------
-// 5) relationships
-// ----------------------------------------------------
-
-// TODO: test
+// TODO: test relationships response

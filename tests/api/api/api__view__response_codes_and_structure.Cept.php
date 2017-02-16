@@ -138,6 +138,13 @@ $I->sendMultiple($requests, function($request) use ($I) {
     //
     // ----------------------------------------------------
 
+    $I->expect("attributes object should not include any foreign keys");
+    $attributes = $I->grabResponseJsonPath('$.data[*].attributes');
+    $unique_attributes = array_reduce($attributes, function ($carry, $obj) {
+        return array_unique(array_merge($carry, array_keys($obj)));
+    }, []);
+    $I->assertNotContainsRegex('/(.*?)\_id$/', $unique_attributes);
+
     // ----------------------------------------------------
     // 7) links
     //
@@ -163,7 +170,8 @@ $I->sendMultiple($requests, function($request) use ($I) {
     //
     // ----------------------------------------------------
 
-    // TODO: test
+    $I->expect("should not return meta for any entities");
+    $I->seeNotResponseJsonPath('$.data[*].meta');
 
     // ----------------------------------------------------
     // 9) relationships
@@ -176,6 +184,6 @@ $I->sendMultiple($requests, function($request) use ($I) {
     //
     // ----------------------------------------------------
 
-    // TODO: test
+    // TODO: test relationships response
 
 });
