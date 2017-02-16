@@ -170,8 +170,8 @@ $I->sendMultiple($requests, function($request) use ($I) {
     //
     // ----------------------------------------------------
 
-    $I->expect("should not return meta for any entities");
-    $I->seeNotResponseJsonPath('$.data[*].meta');
+    $I->expect("should not return meta for entity");
+    $I->seeNotResponseJsonPath('$.data.meta');
 
     // ----------------------------------------------------
     // 9) relationships
@@ -184,6 +184,5 @@ $I->sendMultiple($requests, function($request) use ($I) {
     //
     // ----------------------------------------------------
 
-    // TODO: test relationships response
-
+    // TODO: test relationship response
 });

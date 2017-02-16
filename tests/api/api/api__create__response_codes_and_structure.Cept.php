@@ -111,7 +111,7 @@ $I->sendMultiple($requests, function($request) use ($I) {
     // ----------------------------------------------------
 
     $I->expect("attributes object should not include any foreign keys");
-    $attributes = $I->grabResponseJsonPath('$.data[*].attributes');
+    $attributes = $I->grabResponseJsonPath('$.data.attributes');
     $unique_attributes = array_reduce($attributes, function ($carry, $obj) {
         return array_unique(array_merge($carry, array_keys($obj)));
     }, []);
@@ -143,7 +143,7 @@ $I->sendMultiple($requests, function($request) use ($I) {
     // ----------------------------------------------------
 
     $I->expect("should not return relationships for any entities");
-    $I->seeNotResponseJsonPath('$.data[*].relationships');
+    $I->seeNotResponseJsonPath('$.data.relationships');
 
     // ----------------------------------------------------
     // 9) meta
@@ -157,6 +157,6 @@ $I->sendMultiple($requests, function($request) use ($I) {
     // ----------------------------------------------------
 
     $I->expect("should not return meta for any entities");
-    $I->seeNotResponseJsonPath('$.data[*].meta');
+    $I->seeNotResponseJsonPath('$.data.meta');
 
 });

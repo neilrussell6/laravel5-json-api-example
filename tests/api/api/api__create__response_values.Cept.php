@@ -73,7 +73,7 @@ $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/user
 // ----------------------------------------------------
 
 $I->expect("should not return meta for any entities");
-$I->seeNotResponseJsonPath('$.data[*].meta');
+$I->seeNotResponseJsonPath('$.data.meta');
 
 // ----------------------------------------------------
 // 5) relationships
@@ -123,7 +123,7 @@ $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/proj
 // ----------------------------------------------------
 
 $I->expect("should not return meta for any entities");
-$I->seeNotResponseJsonPath('$.data[*].meta');
+$I->seeNotResponseJsonPath('$.data.meta');
 
 // ----------------------------------------------------
 // 5) relationships
