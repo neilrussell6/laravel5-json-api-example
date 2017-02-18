@@ -38,6 +38,11 @@ $I->sendMultiple($requests, function($request) use ($I) {
 
     $I->expect("should return 404 HTTP code");
     $I->seeResponseCodeIs(HttpCode::NOT_FOUND);
+
+    // ----------------------------------------------------
+
+    $I->expect("should not return a links object");
+    $I->seeNotResponseJsonPath('$.links');
     
     // ----------------------------------------------------
 

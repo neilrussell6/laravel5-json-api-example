@@ -74,6 +74,11 @@
 //
 //    // ----------------------------------------------------
 //
+//    $I->expect("should not return a links object");
+//    $I->seeNotResponseJsonPath('$.links');
+//
+//    // ----------------------------------------------------
+//
 //    $I->expect("should return an array of errors");
 //    $I->seeResponseJsonPathType('$.errors', 'array:!empty');
 //

@@ -12,7 +12,7 @@ class BuildJsonApiResponse
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle ($request, Closure $next)
     {
         $response = $next($request);
 
@@ -28,7 +28,7 @@ class BuildJsonApiResponse
         if (!is_null($original_content)) {
 
             // make response content and update response
-            $content = JsonApiUtils::makeResponseObject($original_content, $request->fullUrl());
+            $content = JsonApiUtils::makeResponseObject($original_content);
             $response->setContent($content);
         }
 

@@ -18,13 +18,11 @@ class CreateProjectUserTable extends Migration
 
             $table->integer('project_id')->unsigned();
             $table->foreign('project_id')
-                ->references('id')->on('projects')
-                ->onDelete('cascade');
+                ->references('id')->on('projects');
 
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')
-                ->references('id')->on('users')
-                ->onDelete('cascade');
+                ->references('id')->on('users');
 
             $table->boolean('is_owner')->default(false);
             $table->timestamps();

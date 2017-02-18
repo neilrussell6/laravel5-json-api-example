@@ -50,7 +50,14 @@ $I->comment("when we view user 1");
 $I->sendGET("/api/users/{$user_1_id}");
 
 // ----------------------------------------------------
-// 1) id & type
+// 1) top-level links
+// ----------------------------------------------------
+
+$I->expect("should return correct top-level self link");
+$I->seeResponseJsonPathRegex('$.links.self', '/^http\:\/\/[^\/]+\/api\/users\/1$/');
+
+// ----------------------------------------------------
+// 2) id & type
 // ----------------------------------------------------
 
 $I->expect("should return correct type & id values in resource object");
@@ -58,7 +65,7 @@ $I->seeResponseJsonPathSame('$.data.type', 'users');
 $I->seeResponseJsonPathSame('$.data.id', "{$user_1_id}");
 
 // ----------------------------------------------------
-// 2) attributes
+// 3) attributes
 // ----------------------------------------------------
 
 $I->expect("should return correct attributes for the entity");
@@ -68,14 +75,6 @@ $I->seeResponseJsonPathType('$.data.attributes.email', 'string:!empty');
 $I->expect("attributes object should not include type or id");
 $I->seeNotResponseJsonPath('$.data.attributes.type');
 $I->seeNotResponseJsonPath('$.data.attributes.id');
-
-// ----------------------------------------------------
-// 3) links
-// ----------------------------------------------------
-
-$I->expect("should return correct links object containing only a self property");
-$I->seeResponseJsonPathType('$.data.links', 'array:!empty');
-$I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/users\/1$/');
 
 // ----------------------------------------------------
 // 4) relationships
@@ -115,7 +114,14 @@ $I->comment("when we view project 1");
 $I->sendGET("/api/projects/{$project_1_id}");
 
 // ----------------------------------------------------
-// 1) id & type
+// 1) top-level links
+// ----------------------------------------------------
+
+$I->expect("should return correct top-level self link");
+$I->seeResponseJsonPathRegex('$.links.self', '/^http\:\/\/[^\/]+\/api\/projects\/1$/');
+
+// ----------------------------------------------------
+// 2) id & type
 // ----------------------------------------------------
 
 $I->expect("should return correct type & id values in resource object");
@@ -123,7 +129,7 @@ $I->seeResponseJsonPathSame('$.data.type', 'projects');
 $I->seeResponseJsonPathSame('$.data.id', "{$project_1_id}");
 
 // ----------------------------------------------------
-// 2) attributes
+// 3) attributes
 // ----------------------------------------------------
 
 $I->expect("should return correct attributes for the entity");
@@ -135,14 +141,6 @@ $I->seeResponseJsonPathSame('$.data.attributes.status', Project::STATUS_INCOMPLE
 $I->expect("attributes object should not include type or id");
 $I->seeNotResponseJsonPath('$.data.attributes.type');
 $I->seeNotResponseJsonPath('$.data.attributes.id');
-
-// ----------------------------------------------------
-// 3) links
-// ----------------------------------------------------
-
-$I->expect("should return correct links object containing only a self property");
-$I->seeResponseJsonPathType('$.data.links', 'array:!empty');
-$I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/projects\/1$/');
 
 // ----------------------------------------------------
 // 4) relationships
@@ -182,7 +180,14 @@ $I->comment("when we view task 1");
 $I->sendGET("/api/tasks/{$task_1_id}");
 
 // ----------------------------------------------------
-// 1) id & type
+// 1) top-level links
+// ----------------------------------------------------
+
+$I->expect("should return correct top-level self link");
+$I->seeResponseJsonPathRegex('$.links.self', '/^http\:\/\/[^\/]+\/api\/tasks\/1$/');
+
+// ----------------------------------------------------
+// 2) id & type
 // ----------------------------------------------------
 
 $I->expect("should return correct type & id values in resource object");
@@ -190,7 +195,7 @@ $I->seeResponseJsonPathSame('$.data.type', 'tasks');
 $I->seeResponseJsonPathSame('$.data.id', "{$task_1_id}");
 
 // ----------------------------------------------------
-// 2) attributes
+// 3) attributes
 // ----------------------------------------------------
 
 $I->expect("should return correct attributes for the entity");
@@ -205,14 +210,6 @@ $I->seeNotResponseJsonPath('$.data.attributes.id');
 
 $I->expect("attributes object should not include any foreign keys");
 $I->seeNotResponseJsonPath('$.data.attributes.project_id');
-
-// ----------------------------------------------------
-// 3) links
-// ----------------------------------------------------
-
-$I->expect("should return correct links object containing only a self property");
-$I->seeResponseJsonPathType('$.data.links', 'array:!empty');
-$I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/tasks\/1$/');
 
 // ----------------------------------------------------
 // 4) relationships

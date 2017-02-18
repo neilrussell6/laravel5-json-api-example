@@ -7,11 +7,11 @@ $I = new FunctionalTester($scenario);
 
 ///////////////////////////////////////////////////////
 //
-// Test: JsonApiUtils::makePaginationLinksObject
+// Test: JsonApiUtils::makeTopLevelPaginationLinksObject
 //
 ///////////////////////////////////////////////////////
 
-$I->wantTo("make a pagination links object for JSON API response");
+$I->wantTo("make a top-level pagination links object for JSON API response");
 
 //-----------------------------------------------------
 // page 1 of 5
@@ -25,6 +25,7 @@ $paginator = Stub::makeEmpty('Illuminate\Pagination\LengthAwarePaginator', [
     'hasMorePages' => function() { return true; },
     'onFirstPage' => function() { return true; },
 ]);
+$full_base_url = "http://aaa.bbb?page[offset]=1&page[limit]=2";
 $base_url = "http://aaa.bbb";
 $query_params = [
     'page' => [
@@ -33,7 +34,7 @@ $query_params = [
     ]
 ];
 
-$result = JsonApiUtils::makePaginationLinksObject($paginator, $base_url, $query_params);
+$result = JsonApiUtils::makeTopLevelPaginationLinksObject($paginator, $full_base_url, $base_url, $query_params);
 
 //-----------------------------------------------------
 
@@ -65,6 +66,7 @@ $paginator = Stub::makeEmpty('Illuminate\Pagination\LengthAwarePaginator', [
     'hasMorePages' => function() { return true; },
     'onFirstPage' => function() { return false; },
 ]);
+$full_base_url = "http://aaa.bbb?page[offset]=1&page[limit]=2";
 $base_url = "http://aaa.bbb";
 $query_params = [
     'page' => [
@@ -73,7 +75,7 @@ $query_params = [
     ]
 ];
 
-$result = JsonApiUtils::makePaginationLinksObject($paginator, $base_url, $query_params);
+$result = JsonApiUtils::makeTopLevelPaginationLinksObject($paginator, $full_base_url, $base_url, $query_params);
 
 //-----------------------------------------------------
 
@@ -107,6 +109,7 @@ $paginator = Stub::makeEmpty('Illuminate\Pagination\LengthAwarePaginator', [
     'hasMorePages' => function() { return true; },
     'onFirstPage' => function() { return false; },
 ]);
+$full_base_url = "http://aaa.bbb?page[offset]=1&page[limit]=2";
 $base_url = "http://aaa.bbb";
 $query_params = [
     'page' => [
@@ -115,7 +118,7 @@ $query_params = [
     ]
 ];
 
-$result = JsonApiUtils::makePaginationLinksObject($paginator, $base_url, $query_params);
+$result = JsonApiUtils::makeTopLevelPaginationLinksObject($paginator, $full_base_url, $base_url, $query_params);
 
 //-----------------------------------------------------
 
@@ -149,6 +152,7 @@ $paginator = Stub::makeEmpty('Illuminate\Pagination\LengthAwarePaginator', [
     'hasMorePages' => function() { return true; },
     'onFirstPage' => function() { return false; },
 ]);
+$full_base_url = "http://aaa.bbb?page[offset]=1&page[limit]=2";
 $base_url = "http://aaa.bbb";
 $query_params = [
     'page' => [
@@ -157,7 +161,7 @@ $query_params = [
     ]
 ];
 
-$result = JsonApiUtils::makePaginationLinksObject($paginator, $base_url, $query_params);
+$result = JsonApiUtils::makeTopLevelPaginationLinksObject($paginator, $full_base_url, $base_url, $query_params);
 
 //-----------------------------------------------------
 
@@ -191,6 +195,7 @@ $paginator = Stub::makeEmpty('Illuminate\Pagination\LengthAwarePaginator', [
     'hasMorePages' => function() { return false; },
     'onFirstPage' => function() { return false; },
 ]);
+$full_base_url = "http://aaa.bbb?page[offset]=1&page[limit]=2";
 $base_url = "http://aaa.bbb";
 $query_params = [
     'page' => [
@@ -199,7 +204,7 @@ $query_params = [
     ]
 ];
 
-$result = JsonApiUtils::makePaginationLinksObject($paginator, $base_url, $query_params);
+$result = JsonApiUtils::makeTopLevelPaginationLinksObject($paginator, $full_base_url, $base_url, $query_params);
 
 //-----------------------------------------------------
 

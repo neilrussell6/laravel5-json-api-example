@@ -148,16 +148,13 @@ $I->sendMultiple($requests, function($request) use ($I) {
     // ----------------------------------------------------
     // 7) links
     //
-    // Specs:
-    // "a resource object MAY contain ...
-    // links: a links object containing links related to
-    // the resource."
+    // A single item resource that is not a sub resource
+    // request, should not contain a links object.
     //
     // ----------------------------------------------------
 
-    $I->expect("should return a links object for entity containing only a self property");
-    $I->seeResponseJsonPathType('$.data.links', 'array:!empty');
-    $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+$/');
+    $I->expect("should not return a links object");
+    $I->seeNotResponseJsonPath('$.data.links');
 
     // ----------------------------------------------------
     // 8) meta
@@ -182,19 +179,57 @@ $I->sendMultiple($requests, function($request) use ($I) {
     // relationships between the resource and other JSON
     // API resources."
     //
+    // "The value of the relationships key MUST be an
+    // object (a “relationships object”). Members of
+    // the relationships object (“relationships”) represent
+    // references from the resource object in which it’s
+    // defined to other resource objects."
+    //
     // ----------------------------------------------------
 
     $I->expect("should return a relationships object for entity");
-    $I->seeResponseJsonPathType('$.data.links', 'array:!empty');
     $I->seeResponseJsonPathType('$.data.relationships', 'array:!empty');
 
+    // ----------------------------------------------------
     // ... links
+    //
+    // Specs:
+    // "A “relationship object” MUST contain at least one
+    // of the following ... links"
+    //
+    // ----------------------------------------------------
 
     $I->expect("should return links for each relationship");
     $I->seeResponseJsonPathType('$.data.relationships[*].links', 'array:!empty');
 
-    $I->expect("should return self & related links");
+    // ----------------------------------------------------
+    // ... links : self
+    //
+    // Specs:
+    // "self: a link for the relationship itself
+    // (a “relationship link”). This link allows the client
+    // to directly manipulate the relationship. For
+    // example, removing an author through an article’s
+    // relationship URL would disconnect the person from
+    // the article without deleting the people resource
+    // itself.
+    // When fetched successfully, this link returns the
+    // linkage for the related resources as its primary
+    // data. (See Fetching Relationships.)"
+    //
+    // ----------------------------------------------------
+
+    $I->expect("should return a self link");
     $I->seeResponseJsonPathRegex('$.data.relationships[*].links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+\/relationships\/\w+$/');
+
+    // ----------------------------------------------------
+    // ... links : related
+    //
+    // Specs:
+    // "related: a related resource link."
+    //
+    // ----------------------------------------------------
+
     $I->seeResponseJsonPathRegex('$.data.relationships[*].links.related', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+\/\w+$/');
 
 });

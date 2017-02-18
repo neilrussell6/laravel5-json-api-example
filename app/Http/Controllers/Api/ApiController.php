@@ -11,7 +11,7 @@ class ApiController extends Controller
      *
      * @param Api $model
      */
-    public function __construct(Api $model)
+    public function __construct (Api $model)
     {
         parent::__construct($model);
     }
@@ -22,7 +22,7 @@ class ApiController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function index(Request $request)
+    public function index (Request $request)
     {
         return response([
             'data' => []

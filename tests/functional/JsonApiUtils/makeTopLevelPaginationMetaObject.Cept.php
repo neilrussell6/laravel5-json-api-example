@@ -7,11 +7,11 @@ $I = new FunctionalTester($scenario);
 
 ///////////////////////////////////////////////////////
 //
-// Test: JsonApiUtils::makePaginationMetaObject
+// Test: JsonApiUtils::makeTopLevelPaginationMetaObject
 //
 ///////////////////////////////////////////////////////
 
-$I->wantTo("make a pagination meta object for JSON API response");
+$I->wantTo("make a top-level pagination meta object for JSON API response");
 
 //-----------------------------------------------------
 // valid paginator
@@ -27,7 +27,7 @@ $paginator = Stub::makeEmpty('Illuminate\Pagination\LengthAwarePaginator', [
     'lastPage' => function() { return 105; },
 ]);
 
-$result = JsonApiUtils::makePaginationMetaObject($paginator);
+$result = JsonApiUtils::makeTopLevelPaginationMetaObject($paginator);
 
 //-----------------------------------------------------
 

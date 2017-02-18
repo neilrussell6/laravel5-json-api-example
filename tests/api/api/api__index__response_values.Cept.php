@@ -46,6 +46,13 @@ $I->comment("when we index users");
 $I->sendGet('/api/users');
 
 // ----------------------------------------------------
+// 1) top-level links
+// ----------------------------------------------------
+
+$I->expect("should include correct top-level self link");
+$I->seeResponseJsonPathRegex('$.links.self', '/^http\:\/\/[^\/]+\/api\/users$/');
+
+// ----------------------------------------------------
 // 1) id & type
 // ----------------------------------------------------
 

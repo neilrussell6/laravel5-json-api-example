@@ -26,7 +26,7 @@ class CreateTaskUserTable extends Migration
                 ->references('id')->on('users')
                 ->onDelete('cascade');
 
-            $table->boolean('owner')->default(false);
+            $table->boolean('is_owner')->default(false);
             $table->timestamps();
         });
     }

@@ -13,7 +13,7 @@ class ValidateJsonApiRequest
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle (Request $request, Closure $next)
     {
         $errors = [];
         $error_code = null;

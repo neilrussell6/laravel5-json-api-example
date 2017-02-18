@@ -31,7 +31,7 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return void
      */
-    public function report(Exception $exception)
+    public function report (Exception $exception)
     {
         parent::report($exception);
     }
@@ -43,7 +43,7 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception)
+    public function render ($request, Exception $exception)
     {
         $errors = [];
         $error_code = null;
@@ -71,9 +71,8 @@ class Handler extends ExceptionHandler
 
         // respond with error
         if (!empty($errors)) {
-            $content = JsonApiUtils::makeResponseObject([
-                'errors' => $errors
-            ], $request->fullUrl());
+            $links = [ 'self' => $request->fullUrl() ];
+            $content = JsonApiUtils::makeResponseObject([ 'errors' => $errors ], $links);
             return response($content, $error_code);
         }
 
@@ -87,7 +86,7 @@ class Handler extends ExceptionHandler
      * @param  \Illuminate\Auth\AuthenticationException  $exception
      * @return \Illuminate\Http\Response
      */
-    protected function unauthenticated($request, AuthenticationException $exception)
+    protected function unauthenticated ($request, AuthenticationException $exception)
     {
         if ($request->expectsJson()) {
             return response()->json(['error' => 'Unauthenticated.'], 401);

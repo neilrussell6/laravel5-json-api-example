@@ -38,7 +38,7 @@ if(!function_exists('http_build_url'))
      * @param array &$new_url		If set, filled with array version of new url
      * @return string
      */
-    function http_build_url(/*string|array*/ $url, /*string|array*/ $parts = array(), /*int*/ $flags = HTTP_URL_REPLACE, /*array*/ &$new_url = false)
+    function http_build_url (/*string|array*/ $url, /*string|array*/ $parts = array(), /*int*/ $flags = HTTP_URL_REPLACE, /*array*/ &$new_url = false)
     {
         // If the $url is a string
         if(is_string($url))

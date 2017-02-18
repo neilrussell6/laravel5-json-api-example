@@ -67,7 +67,14 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseCodeIs(HttpCode::OK);
 
     // ----------------------------------------------------
-    // 2) id & type
+    // 2) top-level links
+    // ----------------------------------------------------
+
+    $I->expect("should include top-level self link");
+    $I->seeResponseJsonPathRegex('$.links.self', '/^http\:\/\/[^\/]+\/api\/\w+$/');
+
+    // ----------------------------------------------------
+    // 3) id & type
     //
     // Specs:
     // "A resource object MUST contain ... id."
@@ -82,7 +89,7 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseJsonPathType('$.data[*].id', 'string:!empty');
 
     // ----------------------------------------------------
-    // 3) attributes
+    // 4) attributes
     //
     // Specs:
     // "a resource object MAY contain ... attributes: an
@@ -95,7 +102,7 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseJsonPathType('$.data[*].attributes', 'array:!empty');
 
     // ----------------------------------------------------
-    // 4) attributes (id & type)
+    // 5) attributes (id & type)
     //
     // Specs:
     // "a resource can not have ... an attribute or
@@ -108,7 +115,7 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeNotResponseJsonPath('$.data[*].attributes.id');
 
     // ----------------------------------------------------
-    // 5) attributes (same name)
+    // 6) attributes (same name)
     //
     // Specs:
     // "a resource can not have an attribute and
@@ -119,7 +126,7 @@ $I->sendMultiple($requests, function($request) use ($I) {
     // TODO: test
 
     // ----------------------------------------------------
-    // 6) attributes (foreign keys)
+    // 7) attributes (foreign keys)
     //
     // Specs:
     // "Although has-one foreign keys (e.g. author_id) are
@@ -137,7 +144,7 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->assertNotContainsRegex('/(.*?)\_id$/', $unique_attributes);
 
     // ----------------------------------------------------
-    // 7) links
+    // 8) links
     //
     // Specs:
     // "a resource object MAY contain ...
@@ -151,7 +158,7 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseJsonPathRegex('$.data[*].links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+$/');
 
     // ----------------------------------------------------
-    // 8) meta
+    // 9) meta
     //
     // Specs:
     // "a resource object MAY contain ...
@@ -165,7 +172,7 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeNotResponseJsonPath('$.data[*].meta');
 
     // ----------------------------------------------------
-    // 9) relationships
+    // 10) relationships
     //
     // Specs:
     // "a resource object MAY contain ...

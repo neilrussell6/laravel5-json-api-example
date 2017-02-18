@@ -24,13 +24,18 @@ class Task extends Model
     public $available_includes = ['users', 'projects'];
     public $default_includes = ['projects'];
 
-    public function projects()
+    public function project ()
     {
-        return $this->belongsToMany('App\Models\Project');
+        return $this->belongsTo('App\Models\Project');
     }
 
-    public function users()
+    public function users ()
     {
         return $this->belongsToMany('App\Models\User');
     }
+
+//    public function owner ()
+//    {
+//        return $this->belongsTo('App\Models\User');
+//    }
 }

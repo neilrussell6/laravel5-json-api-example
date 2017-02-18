@@ -30,7 +30,7 @@ class Controller extends BaseController
      * Controller constructor.
      * @param $model
      */
-    public function __construct($model)
+    public function __construct ($model)
     {
         $this->model = new $model();
     }
@@ -45,11 +45,22 @@ class Controller extends BaseController
      * @param Request $request
      * @return mixed
      */
-    public function index(Request $request)
+    public function index (Request $request)
     {
-        $pagination_options = $this->makePaginationOptions($request);
-        $paginator = $this->model->paginate($pagination_options['limit'], ['*'], "page['offset']", $pagination_options['offset']);
+        $page_args = $request->query('page');
 
+        // paginate request
+        $pagination_options = $this->makePaginationOptions($page_args);
+        $paginator = $this->model->paginate($pagination_options['limit'], ['*'], "page['offset']", $pagination_options['offset']);
+        
+        // if no pagination arguments are provided,
+        // and the result count falls within the PAGINATION_LIMIT
+        // then return as normal collection
+        if (is_null($page_args) && !$paginator->hasMorePages()) {
+            return Response::collection($request, $paginator->getCollection(), $this->model, 200);
+        }
+
+        // otherwise return paginated response
         return Response::pagination($request, $paginator, $this->model, 200);
     }
 
@@ -60,7 +71,7 @@ class Controller extends BaseController
      * @param $id
      * @return mixed
      */
-    public function show(Request $request, $id)
+    public function show (Request $request, $id)
     {
         $resource = $this->model->findOrFail($id);
         return Response::item($request, $resource, $this->model, 200);
@@ -73,7 +84,7 @@ class Controller extends BaseController
      * @param Request $request
      * @return mixed
      */
-    public function store(Request $request)
+    public function store (Request $request)
     {
         $request_data = $request->all();
 
@@ -99,7 +110,7 @@ class Controller extends BaseController
      * @param Request $request
      * @return mixed
      */
-    public function update(Request $request, $id)
+    public function update (Request $request, $id)
     {
         $request_data = $request->all();
         $request_data_validation = $this->validateRequestData($request_data, $request->fullUrl());
@@ -125,7 +136,7 @@ class Controller extends BaseController
      * @param Request $request
      * @return mixed
      */
-    public function destroy(Request $request, $id)
+    public function destroy (Request $request, $id)
     {
         $this->model->destroy($id);
 
@@ -144,7 +155,7 @@ class Controller extends BaseController
      * @param $request_data
      * @return array
      */
-    protected function validateRequestData($request_data)
+    protected function validateRequestData ($request_data)
     {
         $result = [
             'errors' => [],
@@ -179,28 +190,26 @@ class Controller extends BaseController
     /**
      * make pagination options
      *
-     * @param Request $request
+     * @param $page_args
      * @return array
      */
-    protected function makePaginationOptions(Request $request)
+    protected function makePaginationOptions ($page_args)
     {
-        $page = $request->query('page');
-
         $result = [
             'limit' => self::PAGINATION_LIMIT,
             'offset' => 1,
         ];
 
-        if (is_null($page)) {
+        if (is_null($page_args)) {
             return $result;
         }
 
-        if (array_key_exists('limit', $page) && (int) $page['limit'] < self::PAGINATION_LIMIT) {
-            $result['limit'] = (int) $page['limit'];
+        if (array_key_exists('limit', $page_args) && (int) $page_args['limit'] < self::PAGINATION_LIMIT) {
+            $result['limit'] = (int) $page_args['limit'];
         }
 
-        if (array_key_exists('offset', $page)) {
-            $result['offset'] = (int) $page['offset'];
+        if (array_key_exists('offset', $page_args)) {
+            $result['offset'] = (int) $page_args['offset'];
         }
 
         return $result;

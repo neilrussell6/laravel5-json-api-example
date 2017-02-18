@@ -1,6 +1,5 @@
 <?php namespace App\Utils;
 
-use App\Models\Task;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -12,130 +11,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class JsonApiUtils
 {
-    /**
-     * creates a relationship object for JSON API formatted response
-     *
-     * @param $name
-     * @param $link_self
-     * @return array
-     */
-    public static function makeRelationshipObject($name, $link_self) {
-        return [
-            'links' => [
-                'self' => "{$link_self}/relationships/{$name}",
-                'related' => "{$link_self}/{$name}",
-            ]
-        ];
-    }
-
-    /**
-     * creates a resource object for JSON API formatted response
-     * http://jsonapi.org/format/#document-resource-objects
-     *
-     * @param array $data
-     * @param $model
-     * @param $link_self
-     * @return array
-     */
-    public static function makeResourceObject($data, $model, $link_self, $include_relationships = true)
-    {
-        $collection = new Collection($data);
-
-        // don't include type, id or foreign keys in attributes
-        $filtered_collection = $collection->filter(function($item, $key) {
-            return !in_array($key, ['id', 'type']) && preg_match('/(.*?)\_id$/', $key) !== 1;
-        });
-
-        // relationships
-        $relationships = [];
-        if ($include_relationships && property_exists($model, 'default_includes') && !empty($model->default_includes)) {
-
-            // build relationships objects
-            $relationships = array_reduce($model->default_includes, function ($carry, $default_include) use ($link_self) {
-                return array_merge($carry, [ $default_include => self::makeRelationshipObject($default_include, $link_self) ]);
-            }, []);
-
-            // get relationship data
-//            array_map(function ($default_include) use ($data, $model) {
-//                if (method_exists($model, $default_include)) {
-//                    $relationship_data = $data->$default_include()->get()->toArray();
-//                    var_dump($relationship_data);
-//                }
-//            }, $model->default_includes);
-        }
-
-        $result = [
-            'id'            => strval($data['id']),
-            'type'          => $model->type,
-            'attributes'    => $filtered_collection->toArray(),
-            'links' => [
-                'self' => $link_self
-            ],
-        ];
-
-        if (!empty($relationships)) {
-            $result = array_merge($result, [ 'relationships' => $relationships ]);
-        }
-
-        return $result;
-    }
-
-    /**
-     * creates a pagination links object for JSON API formatted response
-     * http://jsonapi.org/format/#fetching-pagination
-     *
-     * @param LengthAwarePaginator $paginator
-     * @param $base_url
-     * @param $query_params
-     * @return array
-     */
-    public static function makePaginationLinksObject(LengthAwarePaginator $paginator, $base_url, $query_params)
-    {
-        $indices = [
-            'current'   => $paginator->currentPage(),
-            'first'     => 1,
-            'last'      => $paginator->lastPage(),
-            'next'      => $paginator->hasMorePages() ? $paginator->currentPage() + 1 : null,
-            'prev'      => !$paginator->onFirstPage() ? $paginator->currentPage() - 1 : null,
-        ];
-
-        $page_query = array_key_exists('page', $query_params) && !is_null($query_params['page']) ? $query_params['page'] : [];
-
-        $query_params = [
-            'current'   => !is_null($indices['current']) ? http_build_query(['page' => array_replace_recursive($page_query, ['offset' => $indices['current']])]) : null,
-            'first'     => !is_null($indices['first']) ? http_build_query(['page' => array_replace_recursive($page_query, ['offset' => $indices['first']])]) : null,
-            'last'      => !is_null($indices['last']) ? http_build_query(['page' => array_replace_recursive($page_query, ['offset' => $indices['last']])]) : null,
-            'next'      => !is_null($indices['next']) ? http_build_query(['page' => array_replace_recursive($page_query, ['offset' => $indices['next']])]) : null,
-            'prev'      => !is_null($indices['prev']) ? http_build_query(['page' => array_replace_recursive($page_query, ['offset' => $indices['prev']])]) : null,
-        ];
-
-        return [
-            'first' => !is_null($indices['first']) ? "{$base_url}?{$query_params['first']}" : null,
-            'last'  => !is_null($indices['last']) ? "{$base_url}?{$query_params['last']}" : null,
-            'next'  => !is_null($indices['next']) ? "{$base_url}?{$query_params['next']}" : null,
-            'prev'  => !is_null($indices['prev']) ? "{$base_url}?{$query_params['prev']}" : null,
-        ];
-    }
-
-    /**
-     * creates a pagination meta object for JSON API formatted response
-     * http://jsonapi.org/format/#fetching-pagination
-     *
-     * @param LengthAwarePaginator $paginator
-     * @return array
-     */
-    public static function makePaginationMetaObject(LengthAwarePaginator $paginator)
-    {
-        return [
-            'pagination' => [
-                'count'         => $paginator->count(),
-                'limit'         => $paginator->perPage(),
-                'offset'        => $paginator->currentPage(),
-                'total_items'   => $paginator->total(),
-                'total_pages'   => $paginator->lastPage(),
-            ]
-        ];
-    }
 
     /**
      * creates an array of error objects error object for JSON API formatted response
@@ -145,7 +20,7 @@ class JsonApiUtils
      * @param $http_code
      * @return array
      */
-    public static function makeErrorObjects(array $error_messages, $http_code = 422)
+    public static function makeErrorObjects (array $error_messages, $http_code = 422)
     {
         return array_map(function($message) use ($http_code) {
 
@@ -176,7 +51,7 @@ class JsonApiUtils
      * @param $http_code
      * @return array
      */
-    public static function makeErrorObjectsFromAttributeValidationErrors(array $attribute_validation_error_messages, $http_code = 422)
+    public static function makeErrorObjectsFromAttributeValidationErrors (array $attribute_validation_error_messages, $http_code = 422)
     {
         $error_messages = array_map(function($field) use ($attribute_validation_error_messages) {
             return [
@@ -192,14 +67,120 @@ class JsonApiUtils
     }
 
     /**
+     * creates a relationship object for JSON API formatted response
+     *
+     * @param $sub_resource_name
+     * @param $base_url
+     * @return array
+     */
+    public static function makeRelationshipObject ($sub_resource_name, $base_url) {
+        return [
+            'links' => [
+                'self' => "{$base_url}/relationships/{$sub_resource_name}",
+                'related' => "{$base_url}/{$sub_resource_name}",
+            ]
+        ];
+    }
+
+    /**
+     * creates a resource object for JSON API formatted response
+     * http://jsonapi.org/format/#document-resource-objects
+     *
+     * @param array $data
+     * @param $model
+     * @param $base_url
+     * @param $links (links object)
+     * @param bool $include_relationships
+     * @param bool $is_minimal (restricts the results to only type & id)
+     * @return array
+     */
+    public static function makeResourceObject ($data, $model, $base_url, $links, $include_relationships = true, $is_minimal = false)
+    {
+        $collection = new Collection($data);
+
+        // don't include type, id or foreign keys in attributes
+        $filtered_collection = $collection->filter(function($item, $key) {
+            return !in_array($key, ['id', 'type', 'pivot']) && preg_match('/(.*?)\_id$/', $key) !== 1;
+        });
+
+        // type & id
+        $result = [
+            'id'    => strval($data['id']),
+            'type'  => $model->type,
+        ];
+
+        // attributes & links
+        if (!$is_minimal) {
+            $result = array_merge($result, [
+                'attributes'    => $filtered_collection->toArray(),
+            ]);
+
+            if (!is_null($links)) {
+                $result['links'] = $links;
+            }
+        }
+
+        // relationships
+        if ($include_relationships && property_exists($model, 'default_includes') && !empty($model->default_includes)) {
+
+            // build relationships objects
+            $relationships = array_reduce($model->default_includes, function ($carry, $default_include) use ($base_url) {
+                return array_merge($carry, [ $default_include => self::makeRelationshipObject($default_include, $base_url) ]);
+            }, []);
+
+            $result = array_merge($result, [ 'relationships' => $relationships ]);
+        }
+
+        return $result;
+    }
+
+    /**
+     * creates resource object links object for JSON API formatted response
+     * http://jsonapi.org/format/#document-top-level
+     *
+     * @param $request_base_url
+     * @return mixed
+     */
+    public static function makeResourceObjectLinksObject ($request_base_url, $resource_id)
+    {
+        $result = [];
+
+        // relationships resource
+        if (preg_match('/\/\w+\/\d+\/relationships\/\w+$/', $request_base_url)) {
+            // doesn't happen because relationships requests return
+            // resource identifier objects which do not include a
+            // links object
+        }
+        // sub resource
+        else if (preg_match('/\/\w+\/\d+\/\w+$/', $request_base_url)) {
+            $base_url = preg_replace('/\/\w+\/\d+(\/\w+)$/', '$1', $request_base_url);
+            $result['self'] = "{$base_url}/{$resource_id}";
+        }
+        // specific primary resource
+        else if (preg_match('/\/\w+\/\d+$/', $request_base_url)) {
+            // doesn't happen because the resource object will not
+            // contain a link object when the top-level data member
+            // is not an array
+        }
+        // primary resource collection response
+        else if (preg_match('/\/\w+$/', $request_base_url)) {
+            $result['self'] = "{$request_base_url}/{$resource_id}";
+        }
+        else {
+            return null;
+        }
+
+        return $result;
+    }
+
+    /**
      * creates the top level object for JSON API formatted response
      * http://jsonapi.org/format/#document-top-level
      *
      * @param array $response
-     * @param $self_link
      * @return mixed
      */
-    public static function makeResponseObject(array $response, $self_link = null)
+    public static function makeResponseObject (array $response)
     {
         $default_content = [
             'jsonapi' => [
@@ -207,12 +188,103 @@ class JsonApiUtils
             ]
         ];
 
-        if (!is_null($self_link)) {
-            $default_content['links'] = [
-                'self' => $self_link
-            ];
+        return array_merge_recursive($default_content, $response);
+    }
+
+    /**
+     * creates top-level links object for JSON API formatted response
+     * http://jsonapi.org/format/#document-top-level
+     *
+     * @param $request_base_url
+     * @param null $resource_id
+     * @return mixed
+     */
+    public static function makeTopLevelLinksObject ($request_base_url, $resource_id = null)
+    {
+        $result = [];
+
+        // relationships resource
+        if (preg_match('/\/\w+\/\d+\/relationships\/\w+$/', $request_base_url)) {
+            $result['self'] = $request_base_url;
+            $result['related'] = str_replace('relationships/', '', $request_base_url);
+        }
+        // sub resource
+        else if (preg_match('/\/\w+\/\d+\/\w+$/', $request_base_url)) {
+            $result['self'] = $request_base_url;
+        }
+        // specific primary resource
+        else if (preg_match('/\/\w+\/\d+$/', $request_base_url)) {
+            $result['self'] = $request_base_url;
+        }
+        // any other response
+        else {
+            if (is_null($resource_id)) {
+                $result['self'] = $request_base_url;
+            } else {
+                $result['self'] = "{$request_base_url}/{$resource_id}";
+            }
         }
 
-        return array_merge_recursive($default_content, $response);
+        return $result;
+    }
+
+    /**
+     * creates a pagination links object for JSON API formatted response
+     * http://jsonapi.org/format/#fetching-pagination
+     *
+     * @param LengthAwarePaginator $paginator
+     * @param $full_base_url
+     * @param $base_url
+     * @param $query_params
+     * @return array
+     */
+    public static function makeTopLevelPaginationLinksObject (LengthAwarePaginator $paginator, $full_base_url, $base_url, $query_params)
+    {
+        $result = self::makeTopLevelLinksObject($full_base_url);
+
+        $indices = [
+            'current'   => $paginator->currentPage(),
+            'first'     => 1,
+            'last'      => $paginator->lastPage(),
+            'next'      => $paginator->hasMorePages() ? $paginator->currentPage() + 1 : null,
+            'prev'      => !$paginator->onFirstPage() ? $paginator->currentPage() - 1 : null,
+        ];
+
+        $page_query = array_key_exists('page', $query_params) && !is_null($query_params['page']) ? $query_params['page'] : [];
+
+        $query_params = [
+            'current'   => !is_null($indices['current']) ? http_build_query(['page' => array_replace_recursive($page_query, ['offset' => $indices['current']])]) : null,
+            'first'     => !is_null($indices['first']) ? http_build_query(['page' => array_replace_recursive($page_query, ['offset' => $indices['first']])]) : null,
+            'last'      => !is_null($indices['last']) ? http_build_query(['page' => array_replace_recursive($page_query, ['offset' => $indices['last']])]) : null,
+            'next'      => !is_null($indices['next']) ? http_build_query(['page' => array_replace_recursive($page_query, ['offset' => $indices['next']])]) : null,
+            'prev'      => !is_null($indices['prev']) ? http_build_query(['page' => array_replace_recursive($page_query, ['offset' => $indices['prev']])]) : null,
+        ];
+
+        return array_merge_recursive($result, [
+            'first' => !is_null($indices['first']) ? "{$base_url}?{$query_params['first']}" : null,
+            'last'  => !is_null($indices['last']) ? "{$base_url}?{$query_params['last']}" : null,
+            'next'  => !is_null($indices['next']) ? "{$base_url}?{$query_params['next']}" : null,
+            'prev'  => !is_null($indices['prev']) ? "{$base_url}?{$query_params['prev']}" : null,
+        ]);
+    }
+
+    /**
+     * creates a pagination meta object for JSON API formatted response
+     * http://jsonapi.org/format/#fetching-pagination
+     *
+     * @param LengthAwarePaginator $paginator
+     * @return array
+     */
+    public static function makeTopLevelPaginationMetaObject (LengthAwarePaginator $paginator)
+    {
+        return [
+            'pagination' => [
+                'count'         => $paginator->count(),
+                'limit'         => $paginator->perPage(),
+                'offset'        => $paginator->currentPage(),
+                'total_items'   => $paginator->total(),
+                'total_pages'   => $paginator->lastPage(),
+            ]
+        ];
     }
 }

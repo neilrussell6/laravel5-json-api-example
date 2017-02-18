@@ -24,13 +24,18 @@ class Project extends Model
     public $available_includes = ['users', 'tasks'];
     public $default_includes = ['tasks'];
 
-    public function tasks()
+    public function tasks ()
     {
         return $this->hasMany('App\Models\Task');
     }
 
-    public function users()
+    public function users ()
     {
         return $this->belongsToMany('App\Models\User');
     }
+
+//    public function owner ()
+//    {
+//        return $this->belongsTo('App\Models\User');
+//    }
 }

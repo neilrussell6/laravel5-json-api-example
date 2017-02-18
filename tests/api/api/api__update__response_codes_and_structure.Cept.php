@@ -82,6 +82,13 @@ $I->sendMultiple($requests, function($request) use ($I) {
     $I->seeResponseCodeIs(HttpCode::OK);
 
     // ----------------------------------------------------
+    // 2) top-level links
+    // ----------------------------------------------------
+
+    $I->expect("top-level self link should include newly created id");
+    $I->seeResponseJsonPathRegex('$.links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+$/');
+
+    // ----------------------------------------------------
     // 2) id & type
     //
     // Specs:
@@ -154,16 +161,13 @@ $I->sendMultiple($requests, function($request) use ($I) {
     // ----------------------------------------------------
     // 7) links
     //
-    // Specs:
-    // "a resource object MAY contain ...
-    // links: a links object containing links related to
-    // the resource."
+    // A single item resource that is not a sub resource
+    // request, should not contain a links object.
     //
     // ----------------------------------------------------
 
-    $I->expect("should return a links object containing only a self property");
-    $I->seeResponseJsonPathType('$.data.links', 'array:!empty');
-    $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+$/');
+    $I->expect("should not return a links object");
+    $I->seeNotResponseJsonPath('$.data.links');
 
     // ----------------------------------------------------
     // 8) meta
@@ -191,7 +195,6 @@ $I->sendMultiple($requests, function($request) use ($I) {
     // ----------------------------------------------------
 
     $I->expect("should return a relationships object for entity");
-    $I->seeResponseJsonPathType('$.data.links', 'array:!empty');
     $I->seeResponseJsonPathType('$.data.relationships', 'array:!empty');
 
     // ... links
