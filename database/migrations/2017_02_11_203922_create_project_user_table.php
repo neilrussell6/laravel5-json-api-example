@@ -24,7 +24,7 @@ class CreateProjectUserTable extends Migration
             $table->foreign('user_id')
                 ->references('id')->on('users');
 
-            $table->boolean('is_owner')->default(false);
+            $table->boolean('is_editor')->default(false);
             $table->timestamps();
         });
     }

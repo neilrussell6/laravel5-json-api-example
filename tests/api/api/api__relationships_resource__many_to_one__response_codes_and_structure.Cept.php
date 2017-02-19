@@ -49,8 +49,8 @@ $I->assertSame(10, Task::all()->count());
 //
 // Test
 //
-// * sub resource request (many to one)
-//   (...resource/{id}/resource)
+// * relationships request (many to one)
+//   (...resource/{id}/relationships/resource)
 // * test response codes & structure
 //
 ///////////////////////////////////////////////////////
@@ -58,8 +58,8 @@ $I->assertSame(10, Task::all()->count());
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
 
-$project_ids = array_column(project::all()->toArray(), 'id');
-$task_ids = array_column(task::all()->toArray(), 'id');
+$project_ids = array_column(Project::all()->toArray(), 'id');
+$task_ids = array_column(Task::all()->toArray(), 'id');
 
 // ====================================================
 // has results
@@ -72,17 +72,21 @@ $task_ids = array_column(task::all()->toArray(), 'id');
 // "Data, including resources and relationships, can
 // be fetched by sending a GET request to an endpoint."
 //
+// "A server MUST support fetching relationship data
+// for every relationship URL provided as a self link
+// as part of a relationship’s links object."
+//
 // ----------------------------------------------------
 
-$I->comment("when we make a sub resource request to a resource with a many to one relationship with the primary resource");
+$I->comment("when we make a relationships resource request to a resource with a many to one relationship with the primary resource");
 
 $project_1_id = $project_ids[0];
 $task_1_id = $task_ids[0];
 
 $requests = [
-    [ 'GET', "/api/tasks/{$task_1_id}/project" ],
-    [ 'GET', "/api/tasks/{$task_1_id}/owner" ],
-    [ 'GET', "/api/projects/{$project_1_id}/owner" ],
+    [ 'GET', "/api/tasks/{$task_1_id}/relationships/project" ],
+    [ 'GET', "/api/tasks/{$task_1_id}/relationships/owner" ],
+    [ 'GET', "/api/projects/{$project_1_id}/relationships/owner" ],
 ];
 
 $I->sendMultiple($requests, function($request) use ($I) {
@@ -91,6 +95,11 @@ $I->sendMultiple($requests, function($request) use ($I) {
 
     // ----------------------------------------------------
     // 1) sub resource request -> 200 OK
+    //
+    // Specs:
+    // "A server MUST respond to a successful request to
+    // fetch a relationship with a 200 OK response."
+    //
     // ----------------------------------------------------
 
     $I->expect("should return 200 HTTP code");
@@ -99,69 +108,114 @@ $I->sendMultiple($requests, function($request) use ($I) {
     // ----------------------------------------------------
     // 2) top-level links
     //
-    // My assumptions:
-    // A sub resource request should return a top-level
-    // links object containing a self link, and perhaps
-    // a related link (not sure about the related link).
+    // Specs:
+    // "The top-level links object MAY contain self and
+    // related links, as described above for relationship
+    // objects."
     //
     // ----------------------------------------------------
 
     $I->expect("should return a top-level links object");
     $I->seeResponseJsonPathType('$.links', 'array:!empty');
 
-    // ... self link
+    // ----------------------------------------------------
+    // self link
+    //
+    // Specs:
+    // "self: a link for the relationship itself
+    // (a “relationship link”). This link allows the client
+    // to directly manipulate the relationship. For
+    // example, removing an author through an article’s
+    // relationship URL would disconnect the person from
+    // the article without deleting the people resource
+    // itself. When fetched successfully, this link returns
+    // the linkage for the related resources as its primary
+    // data. (See Fetching Relationships.)"
+    //
+    // ----------------------------------------------------
 
-    $I->seeResponseJsonPathRegex('$.links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+\/\w+$/');
+    $I->seeResponseJsonPathRegex('$.links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+\/relationships\/\w+$/');
 
-    // ... related link
+    // ----------------------------------------------------
+    // related link
+    //
+    // Specs:
+    // ??
+    //
+    // ----------------------------------------------------
 
-    // TODO: should a sub resource request contain a related link and what should it be?
+    $I->seeResponseJsonPathRegex('$.links.related', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+\/\w+$/');
 
     // ----------------------------------------------------
     // 3) data
     //
-    // My assumptions:
-    // A sub resource request that returns multiple
-    // entities, should include a full resource object for
-    // each entity.
+    // Specs:
+    // "A “relationship object” MUST contain at least one
+    // of the following ... data: resource linkage"
+    //
+    // "... related resources can be requested from a
+    // relationship endpoint ... /1/relationships/ ...
+    // the primary data would be a collection of resource
+    // identifier objects that represent linkage ..."
     //
     // ----------------------------------------------------
 
-    $I->expect("should return data as a single resource objects");
-    $I->seeResponseJsonPathType('$.data', 'array:!empty'); // TODO: how to test this?
+    $I->expect("should return data as a single resource identifier object");
+    $I->seeResponseJsonPathType('$.data', 'array:!empty');
 
     // ----------------------------------------------------
-    // ... resource object
+    // ... id & type
+    //
+    // Specs:
+    // "A “resource identifier object” is an object that
+    // identifies an individual resource.
+    // A “resource identifier object” MUST contain type and
+    // id members."
+    //
+    // "A “resource identifier object” MAY also include a
+    // meta member, whose value is a meta object that
+    // contains non-standard meta-information."
+    //
+    // My assumptions:
+    // A “resource identifier object” must not contain
+    // attributes or links.
+    //
     // ----------------------------------------------------
 
-    $I->expect("resource object should should include type, id, attributes & links");
+    $I->expect("should return type & id values for resource identifier object as strings");
     $I->seeResponseJsonPathType('$.data.type', 'string:!empty');
     $I->seeResponseJsonPathType('$.data.id', 'string:!empty');
-    $I->seeResponseJsonPathType('$.data.attributes', 'array:!empty');
-    $I->seeResponseJsonPathType('$.data.links', 'array:!empty');
 
     // ----------------------------------------------------
-    // ... resource objects : links
+    // ... attributes & links
     //
     // My assumptions:
-    // The self links for each resource object for a sub
-    // resource request, should not be sub resource links,
-    // but instead should be primary resource links.
-    // eg. ../projects/1 instead of ../users/123/projects/1
+    // A “resource identifier object” must not contain
+    // attributes or links.
     //
     // ----------------------------------------------------
 
-    $I->expect("should return links object, including a self link");
-    $I->seeResponseJsonPathRegex('$.data.links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+$/');
-
-    // TODO: should to one sub resources return relationships object?
+    $I->expect("should not return attributes, links or relationships for resource identifier object");
+    $I->seeNotResponseJsonPath('$.data.attributes');
+    $I->seeNotResponseJsonPath('$.data.links');
+    $I->seeNotResponseJsonPath('$.data.relationships');
 
 });
 
 // ====================================================
 // has no results
-// eg. users/2/projects
+// eg. users/2/relationships/projects
 // ====================================================
+
+// ----------------------------------------------------
+//
+// Specs:
+// "A server MUST respond to a successful request to
+// fetch a resource collection with an array of
+// resource objects or an empty array ([]) as the
+// response document’s primary data."
+//
+// ----------------------------------------------------
 
 $I->comment("when we make a sub resource request to a resource with a many to one relationship with the primary resource, but there are no results");
 
@@ -169,14 +223,12 @@ $task_6_id = $task_ids[5];
 $project_6_id = $project_ids[5];
 
 $requests = [
-    [ 'GET', "/api/tasks/{$task_6_id}/project" ],
-    [ 'GET', "/api/tasks/{$task_6_id}/owner" ],
-    [ 'GET', "/api/projects/{$project_6_id}/owner" ],
+    [ 'GET', "/api/tasks/{$task_6_id}/relationships/project" ],
+    [ 'GET', "/api/tasks/{$task_6_id}/relationships/owner" ],
+    [ 'GET', "/api/projects/{$project_6_id}/relationships/owner" ],
 ];
 
 $I->sendMultiple($requests, function($request) use ($I) {
-
-//    var_dump($I->grabResponseAsJson());die();
 
     $I->comment("given we make a {$request[0]} request to {$request[1]}");
 
@@ -191,9 +243,10 @@ $I->sendMultiple($requests, function($request) use ($I) {
     // 2) top-level links
     // ----------------------------------------------------
 
-    $I->expect("should return a top-level links object, including self link");
+    $I->expect("should return a top-level links object, including self & related links");
     $I->seeResponseJsonPathType('$.links', 'array:!empty');
-    $I->seeResponseJsonPathRegex('$.links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+\/\w+$/');
+    $I->seeResponseJsonPathRegex('$.links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+\/relationships\/\w+$/');
+    $I->seeResponseJsonPathRegex('$.links.related', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+\/\w+$/');
 
     // ----------------------------------------------------
     // 3) data

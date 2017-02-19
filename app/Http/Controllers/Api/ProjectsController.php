@@ -35,31 +35,29 @@ class ProjectsController extends Controller
         return Response::related($request, $this->model, $project, 'tasks', 200);
     }
 
-//    /**
-//     * projects/{id}/tasks
-//     *
-//     * @param Request $request
-//     * @param $id
-//     * @param Task $task
-//     * @return \Dingo\Api\Http\Response
-//     */
-//    public function tasks (Request $request, $id, Task $task)
-//    {
-//        $data = $this->model->findOrFail($id)->tasks;
-//        return $this->relationshipResponse($id, $data, Project::class, Task::class, new TaskTransformer());
-//    }
-//
-//    /**
-//     * projects/{id}/relationships/tasks
-//     *
-//     * @param Request $request
-//     * @param $id
-//     * @param Task $task
-//     * @return \Dingo\Api\Http\Response
-//     */
-//    public function taskRelationships (Request $request, $id, Task $task)
-//    {
-//        $data = $this->model->findOrFail($id)->tasks(['tasks.id'])->get();
-//        return $this->relationshipResponse($id, $data, Project::class, Task::class, new TaskTransformer(), true);
-//    }
+    /**
+     * projects/{id}/relationships/owner
+     * projects/{id}/owner
+     *
+     * @param Request $request
+     * @param $project
+     * @return mixed
+     */
+    public function owner (Request $request, Project $project)
+    {
+        return Response::related($request, $this->model, $project, 'owner', 200);
+    }
+
+    /**
+     * tasks/{id}/relationships/editors
+     * tasks/{id}/editors
+     *
+     * @param Request $request
+     * @param $project
+     * @return mixed
+     */
+    public function editors (Request $request, Project $project)
+    {
+        return Response::related($request, $this->model, $project, 'editors', 200);
+    }
 }

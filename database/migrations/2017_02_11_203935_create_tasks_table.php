@@ -19,8 +19,12 @@ class CreateTasksTable extends Migration
             
             $table->integer('project_id')->unsigned()->nullable();
             $table->foreign('project_id')
-                ->references('id')->on('projects')
-                ->onDelete('cascade');
+                ->references('id')->on('projects');
+
+            // owner
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->foreign('user_id')
+                ->references('id')->on('users');
 
             $table->string('name');
             $table->integer('status')->default(Task::STATUS_INCOMPLETE);

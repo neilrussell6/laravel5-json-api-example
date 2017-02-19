@@ -40,6 +40,7 @@ class ResponseServiceProvider extends ServiceProvider
             $action = $request->route()->getAction();
             $is_minimal = array_key_exists('is_minimal', $action) && $action['is_minimal'];
 
+            // check how many queries are being created here
             $relationship = $entity->$name();
 
             switch (get_class($relationship)) {
@@ -52,19 +53,19 @@ class ResponseServiceProvider extends ServiceProvider
                 case HasManyThrough::class:
                 case HasOneOrMany::class: // TODO: how to handle these?
 
-                    $collection = new Collection($relationship->get());
-                    return $factory->make(JsonApiResponseMacroUtils::makeCollectionResponse($collection, $model, $request->url(), $is_minimal), $status);
+                    $related_collection = new Collection($relationship->get());
+                    $related_model = !is_null($entity->$name) ? $entity->$name()->getRelated() : null;
+                    return $factory->make(JsonApiResponseMacroUtils::makeCollectionResponse($related_collection, $related_model, $request->url(), $is_minimal), $status);
 
                 // single entity relationships
 
                 case BelongsTo::class:
                 case HasOne::class:
 
-                    $data = $relationship->get()->toArray();
-                    $data = count($data) === 0 ? null : $data[0];
-
+                    $related_data = !is_null($entity->$name) ? $entity->$name->toArray() : null;
+                    $related_model = !is_null($entity->$name) ? $entity->$name()->getRelated() : null;
                     $include_resource_object_links = true;
-                    return $factory->make(JsonApiResponseMacroUtils::makeItemResponse($data, $model, $request->url(), $include_resource_object_links), $status);
+                    return $factory->make(JsonApiResponseMacroUtils::makeItemResponse($related_data, $related_model, $request->url(), $include_resource_object_links, $is_minimal), $status);
             }
         });
     }

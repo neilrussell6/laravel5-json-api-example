@@ -11,7 +11,7 @@ class Project extends Model
     const STATUS_COMPLETE   = 2;
     const STATUS_TRASH      = 3;
 
-    protected $fillable     = ['name', 'status'];
+    protected $fillable     = ['user_id', 'name', 'status'];
     protected $hidden       = [];
     protected $casts        = [
         'status' => 'integer',
@@ -21,8 +21,18 @@ class Project extends Model
     public $rules = [
         'name' => 'required'
     ];
-    public $available_includes = ['users', 'tasks'];
+    public $available_includes = ['editor', 'owner', 'tasks', 'users'];
     public $default_includes = ['tasks'];
+
+    public function editors ()
+    {
+        return $this->belongsToMany('App\Models\User')->wherePivot('is_editor', true);
+    }
+
+    public function owner ()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id'); // we would not need to provide a foreign key if the method was called 'user'
+    }
 
     public function tasks ()
     {
@@ -31,11 +41,6 @@ class Project extends Model
 
     public function users ()
     {
-        return $this->belongsToMany('App\Models\User');
+        return $this->belongsToMany('App\Models\User')->withPivot('is_editor');
     }
-
-//    public function owner ()
-//    {
-//        return $this->belongsTo('App\Models\User');
-//    }
 }
