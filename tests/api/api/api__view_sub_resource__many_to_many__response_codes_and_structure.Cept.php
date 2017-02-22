@@ -92,12 +92,12 @@ $task_1_id = $task_ids[0];
 
 $requests = [
     [ 'GET', "/api/users/{$user_1_id}/projects" ],
-    [ 'GET', "/api/users/{$user_1_id}/tasks" ],
-    [ 'GET', "/api/users/{$user_2_id}/tasks" ],
-    [ 'GET', "/api/users/{$user_3_id}/tasks" ],
-    [ 'GET', "/api/projects/{$project_1_id}/tasks" ],
-    [ 'GET', "/api/projects/{$project_1_id}/editors" ],
-    [ 'GET', "/api/tasks/{$task_1_id}/editors" ],
+//    [ 'GET', "/api/users/{$user_1_id}/tasks" ],
+//    [ 'GET', "/api/users/{$user_2_id}/tasks" ],
+//    [ 'GET', "/api/users/{$user_3_id}/tasks" ],
+//    [ 'GET', "/api/projects/{$project_1_id}/tasks" ],
+//    [ 'GET', "/api/projects/{$project_1_id}/editors" ],
+//    [ 'GET', "/api/tasks/{$task_1_id}/editors" ],
 ];
 
 $I->sendMultiple($requests, function($request) use ($I) {
@@ -182,44 +182,44 @@ $user_4_id = $user_ids[3];
 $project_2_id = $project_ids[1];
 $task_2_id = $task_ids[1];
 
-$requests = [
-    [ 'GET', "/api/users/{$user_2_id}/projects" ],
-    [ 'GET', "/api/users/{$user_4_id}/tasks" ],
-    [ 'GET', "/api/projects/{$project_2_id}/tasks" ],
-    [ 'GET', "/api/projects/{$project_2_id}/editors" ],
-    [ 'GET', "/api/tasks/{$task_2_id}/editors" ],
-];
-
-$I->sendMultiple($requests, function($request) use ($I) {
-
-    $I->comment("given we make a {$request[0]} request to {$request[1]}");
-
-    // ----------------------------------------------------
-    // 1) sub resource request -> 200 OK
-    // ----------------------------------------------------
-
-    $I->expect("should return 200 HTTP code");
-    $I->seeResponseCodeIs(HttpCode::OK);
-
-    // ----------------------------------------------------
-    // 2) top-level links
-    // ----------------------------------------------------
-
-    $I->expect("should return a top-level links object, including self link");
-    $I->seeResponseJsonPathType('$.links', 'array:!empty');
-    $I->seeResponseJsonPathRegex('$.links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+\/\w+$/');
-
-    // ----------------------------------------------------
-    // 3) data
-    //
-    // Specs:
-    // "Resource linkage MUST be represented as one of the
-    // following ... an empty array ([]) for empty to-many
-    // relationships."
-    //
-    // ----------------------------------------------------
-
-    $I->expect("should return empty array as data");
-    $I->seeResponseJsonPathType('$.data', 'array:empty');
-
-});
+//$requests = [
+//    [ 'GET', "/api/users/{$user_2_id}/projects" ],
+//    [ 'GET', "/api/users/{$user_4_id}/tasks" ],
+//    [ 'GET', "/api/projects/{$project_2_id}/tasks" ],
+//    [ 'GET', "/api/projects/{$project_2_id}/editors" ],
+//    [ 'GET', "/api/tasks/{$task_2_id}/editors" ],
+//];
+//
+//$I->sendMultiple($requests, function($request) use ($I) {
+//
+//    $I->comment("given we make a {$request[0]} request to {$request[1]}");
+//
+//    // ----------------------------------------------------
+//    // 1) sub resource request -> 200 OK
+//    // ----------------------------------------------------
+//
+//    $I->expect("should return 200 HTTP code");
+//    $I->seeResponseCodeIs(HttpCode::OK);
+//
+//    // ----------------------------------------------------
+//    // 2) top-level links
+//    // ----------------------------------------------------
+//
+//    $I->expect("should return a top-level links object, including self link");
+//    $I->seeResponseJsonPathType('$.links', 'array:!empty');
+//    $I->seeResponseJsonPathRegex('$.links.self', '/^http\:\/\/[^\/]+\/api\/\w+\/\d+\/\w+$/');
+//
+//    // ----------------------------------------------------
+//    // 3) data
+//    //
+//    // Specs:
+//    // "Resource linkage MUST be represented as one of the
+//    // following ... an empty array ([]) for empty to-many
+//    // relationships."
+//    //
+//    // ----------------------------------------------------
+//
+//    $I->expect("should return empty array as data");
+//    $I->seeResponseJsonPathType('$.data', 'array:empty');
+//
+//});

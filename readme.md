@@ -107,3 +107,20 @@ then you can run the commands like this:
 $ cc build
 $ cc run
 ```
+
+## Road Map
+
+* update or create relationships through the relationships object in a request like this:
+  UPDATE /articles/1
+  {
+    "data": [
+      "relationships": {
+        "comments": [ ... ],
+        "author": { "type": "users", "id": "123" },
+      }
+    }
+  }  
+* Add Pagination for related resources
+* Add support for inclusion of related resources
+* Add support for sorting
+* Add support for filtering

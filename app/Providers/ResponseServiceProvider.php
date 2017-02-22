@@ -22,12 +22,12 @@ class ResponseServiceProvider extends ServiceProvider
      */
     public function boot (ResponseFactory $factory)
     {
-        $factory->macro('item', function (Request $request, $data, $model, $status = 200) use ($factory) {
-            return $factory->make(JsonApiResponseMacroUtils::makeItemResponse($data, $model, $request->url()), $status);
+        $factory->macro('collection', function (Request $request, Collection $collection, $model, $status = 200, $include_resource_object_links = true, $is_minimal = false) use ($factory) {
+            return $factory->make(JsonApiResponseMacroUtils::makeCollectionResponse($collection, $model, $request->url(), $include_resource_object_links, $is_minimal), $status);
         });
 
-        $factory->macro('collection', function (Request $request, Collection $collection, $model, $status = 200, $is_minimal = false) use ($factory) {
-            return $factory->make(JsonApiResponseMacroUtils::makeCollectionResponse($collection, $model, $request->url(), $is_minimal), $status);
+        $factory->macro('item', function (Request $request, $data, $model, $status = 200, $include_resource_object_links = false, $is_minimal = false) use ($factory) {
+            return $factory->make(JsonApiResponseMacroUtils::makeItemResponse($data, $model, $request->url(), $include_resource_object_links, $is_minimal), $status);
         });
 
         $factory->macro('pagination', function (Request $request, LengthAwarePaginator $paginator, $model, $status = 200) use ($factory) {
@@ -36,37 +36,39 @@ class ResponseServiceProvider extends ServiceProvider
 
         $factory->macro('related', function (Request $request, $model, $entity, $name, $status = 200) use ($factory) {
 
-            // is minimal ? (return resource identifier object ie. type and id only)
-            $action = $request->route()->getAction();
-            $is_minimal = array_key_exists('is_minimal', $action) && $action['is_minimal'];
+            var_dump("XXXX");die();
 
-            // check how many queries are being created here
-            $relationship = $entity->$name();
-
-            switch (get_class($relationship)) {
-
-                // multiple entity relationships
-
-                default:
-                case HasMany::class:
-                case BelongsToMany::class:
-                case HasManyThrough::class:
-                case HasOneOrMany::class: // TODO: how to handle these?
-
-                    $related_collection = new Collection($relationship->get());
-                    $related_model = !is_null($entity->$name) ? $entity->$name()->getRelated() : null;
-                    return $factory->make(JsonApiResponseMacroUtils::makeCollectionResponse($related_collection, $related_model, $request->url(), $is_minimal), $status);
-
-                // single entity relationships
-
-                case BelongsTo::class:
-                case HasOne::class:
-
-                    $related_data = !is_null($entity->$name) ? $entity->$name->toArray() : null;
-                    $related_model = !is_null($entity->$name) ? $entity->$name()->getRelated() : null;
-                    $include_resource_object_links = true;
-                    return $factory->make(JsonApiResponseMacroUtils::makeItemResponse($related_data, $related_model, $request->url(), $include_resource_object_links, $is_minimal), $status);
-            }
+//            // is minimal ? (return resource identifier object ie. type and id only)
+//            $action = $request->route()->getAction();
+//            $is_minimal = array_key_exists('is_minimal', $action) && $action['is_minimal'];
+//
+//            // check how many queries are being created here
+//            $relationship = $entity->$name();
+//
+//            switch (get_class($relationship)) {
+//
+//                // multiple entity relationships
+//
+//                default:
+//                case HasMany::class:
+//                case BelongsToMany::class:
+//                case HasManyThrough::class:
+//                case HasOneOrMany::class: // TODO: how to handle these?
+//
+//                    $related_collection = new Collection($relationship->get());
+//                    $related_model = !is_null($entity->$name) ? $entity->$name()->getRelated() : null;
+//                    return $factory->make(JsonApiResponseMacroUtils::makeCollectionResponse($related_collection, $related_model, $request->url(), $is_minimal), $status);
+//
+//                // single entity relationships
+//
+//                case BelongsTo::class:
+//                case HasOne::class:
+//
+//                    $related_data = !is_null($entity->$name) ? $entity->$name->toArray() : null;
+//                    $related_model = !is_null($entity->$name) ? $entity->$name()->getRelated() : null;
+//                    $include_resource_object_links = true;
+//                    return $factory->make(JsonApiResponseMacroUtils::makeItemResponse($related_data, $related_model, $request->url(), $include_resource_object_links, $is_minimal), $status);
+//            }
         });
     }
 

@@ -53,8 +53,15 @@ class JsonApiUtils
      */
     public static function makeErrorObjectsFromAttributeValidationErrors (array $attribute_validation_error_messages, $http_code = 422)
     {
-        $error_messages = array_map(function($field) use ($attribute_validation_error_messages) {
+        $error_messages = array_map(function($field) use ($attribute_validation_error_messages, $http_code) {
+
+            // use 4509 for unique error, otherwise use provided default
+            $status = array_reduce($attribute_validation_error_messages[ $field ], function ($carry, $message) {
+                return preg_match('/unique/', $message) ? 409 : $carry;
+            }, $http_code);
+
             return [
+                'status'    => $status,
                 'detail'    => $attribute_validation_error_messages[ $field ][0],
                 'source'    => [
                     'pointer' => "/data/attributes/{$field}"
@@ -286,5 +293,26 @@ class JsonApiUtils
                 'total_pages'   => $paginator->lastPage(),
             ]
         ];
+    }
+
+    /**
+     * creates a pagination meta object for JSON API formatted response
+     * http://jsonapi.org/format/#fetching-pagination
+     *
+     * @param $errors (JSON API error objects)
+     * @param int $status_code
+     * @return array
+     */
+    public static function getPredominantErrorStatusCode ($errors, $status_code = 422)
+    {
+        $statuses = array_count_values(array_column($errors, 'status'));
+        $max_count = max($statuses);
+        $value_counts = array_count_values($statuses);
+
+        if ($value_counts[$max_count] > 1) {
+            return $status_code;
+        }
+
+        return array_search($max_count, $statuses);
     }
 }

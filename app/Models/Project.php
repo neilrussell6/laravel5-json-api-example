@@ -26,7 +26,7 @@ class Project extends Model
 
     public function editors ()
     {
-        return $this->belongsToMany('App\Models\User')->wherePivot('is_editor', true);
+        return $this->belongsToMany('App\Models\User')->withPivot('is_editor')->wherePivot('is_editor', true);
     }
 
     public function owner ()

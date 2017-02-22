@@ -19,38 +19,54 @@ $I->comment("given 10 users");
 factory(User::class, 10)->create();
 $I->assertSame(10, User::all()->count());
 
+$user_ids = array_column(User::all()->toArray(), 'id');
+$user_1_id = $user_ids[0];
+$user_2_id = $user_ids[1];
+$user_3_id = $user_ids[2];
+$user_4_id = $user_ids[3];
+
 // projects
 
 $I->comment("given 10 projects");
 factory(Project::class, 10)->create();
 $I->assertSame(10, Project::all()->count());
 
+$project_ids = array_column(User::all()->toArray(), 'id');
+$project_1_id = $project_ids[0];
+$project_2_id = $project_ids[1];
+$project_3_id = $project_ids[2];
+
 // ... shared with user 1
 $I->comment("given user 1 is associated with the first 5 projects");
-Project::paginate(5)->getCollection()->map(function ($project) {
-    $project->users()->attach(1);
+Project::paginate(5)->getCollection()->map(function ($project) use($user_1_id) {
+    $project->users()->attach($user_1_id);
 });
 
 // ... has user 1 as editor
-$I->comment("given user 1 is editor on task 1");
-Project::find(1)->users()->sync([1 => ['is_editor' => true]], false); // the false stops sync from overriding existing values in the pivot table
+$I->comment("given user 1 is editor on project 1");
+Project::find($project_1_id)->users()->sync([ $user_1_id => [ 'is_editor' => true ] ], false); // the false stops sync from overriding existing values in the pivot table
 
 // tasks
 
 // ... belonging to project 1
 $I->comment("given 10 tasks");
-factory(Task::class, 10)->create(['project_id' => 1]);
+factory(Task::class, 10)->create([ 'project_id' => $project_1_id ]);
 $I->assertSame(10, Task::all()->count());
+
+$task_ids = array_column(User::all()->toArray(), 'id');
+$task_1_id = $task_ids[0];
+$task_2_id = $task_ids[1];
+$task_3_id = $task_ids[2];
 
 // ... shared with user 1
 $I->comment("given user 1 is associated with the first 5 tasks");
-Task::paginate(5)->getCollection()->map(function ($task) {
-    $task->users()->attach(1);
+Task::paginate(5)->getCollection()->map(function ($task) use ($user_1_id) {
+    $task->users()->attach($user_1_id);
 });
 
 // ... have users 2 & 3 as editor (will also share with users 2 & 3)
 $I->comment("given user's 2 & 3 are editors on task 1");
-Task::find(1)->editors()->sync([2 => ['is_editor' => true], 3 => ['is_editor' => true]], false); // the false stops sync from overriding existing values in the pivot table
+Task::find($task_1_id)->editors()->sync([ $user_2_id => [ 'is_editor' => true ], $user_3_id => [ 'is_editor' => true ] ], false); // the false stops sync from overriding existing values in the pivot table
 
 ///////////////////////////////////////////////////////
 //
@@ -64,10 +80,6 @@ Task::find(1)->editors()->sync([2 => ['is_editor' => true], 3 => ['is_editor' =>
 
 $I->haveHttpHeader('Content-Type', 'application/vnd.api+json');
 $I->haveHttpHeader('Accept', 'application/vnd.api+json');
-
-$user_ids = array_column(User::all()->toArray(), 'id');
-$project_ids = array_column(Project::all()->toArray(), 'id');
-$task_ids = array_column(Task::all()->toArray(), 'id');
 
 // ====================================================
 // has results
@@ -88,16 +100,14 @@ $task_ids = array_column(Task::all()->toArray(), 'id');
 
 $I->comment("when we make a relationships request to a resource with a many to many relationship with the primary resource");
 
-$user_1_id = $user_ids[0];
-$project_1_id = $project_ids[0];
-$task_1_id = $task_ids[0];
-
 $requests = [
     [ 'GET', "/api/users/{$user_1_id}/relationships/projects" ],
     [ 'GET', "/api/users/{$user_1_id}/relationships/tasks" ],
     [ 'GET', "/api/projects/{$project_1_id}/relationships/tasks" ],
     [ 'GET', "/api/projects/{$project_1_id}/relationships/editors" ],
+    [ 'GET', "/api/projects/{$project_1_id}/relationships/users" ],
     [ 'GET', "/api/tasks/{$task_1_id}/relationships/editors" ],
+    [ 'GET', "/api/tasks/{$task_1_id}/relationships/users" ],
 ];
 
 $I->sendMultiple($requests, function($request) use ($I) {
@@ -231,11 +241,6 @@ $I->sendMultiple($requests, function($request) use ($I) {
 // ----------------------------------------------------
 
 $I->comment("when we make a relationships request to a resource with a many to many relationship with the primary resource, and there are no results");
-
-$user_2_id = $user_ids[1];
-$user_4_id = $user_ids[3];
-$project_2_id = $project_ids[1];
-$task_2_id = $task_ids[1];
 
 $requests = [
     [ 'GET', "/api/users/{$user_2_id}/relationships/projects" ],

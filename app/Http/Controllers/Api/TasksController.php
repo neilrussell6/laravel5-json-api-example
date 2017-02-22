@@ -23,43 +23,4 @@ class TasksController extends Controller
     {
         parent::__construct($model);
     }
-
-    /**
-     * tasks/{id}/relationships/project
-     * tasks/{id}/project
-     *
-     * @param Request $request
-     * @param $task
-     * @return mixed
-     */
-    public function project (Request $request, Task $task)
-    {
-        return Response::related($request, $this->model, $task, 'project', 200);
-    }
-
-    /**
-     * tasks/{id}/relationships/owner
-     * tasks/{id}/owner
-     *
-     * @param Request $request
-     * @param $task
-     * @return mixed
-     */
-    public function owner (Request $request, Task $task)
-    {
-        return Response::related($request, $this->model, $task, 'owner', 200);
-    }
-
-    /**
-     * tasks/{id}/relationships/editors
-     * tasks/{id}/editors
-     *
-     * @param Request $request
-     * @param $task
-     * @return mixed
-     */
-    public function editors (Request $request, Task $task)
-    {
-        return Response::related($request, $this->model, $task, 'editors', 200);
-    }
 }

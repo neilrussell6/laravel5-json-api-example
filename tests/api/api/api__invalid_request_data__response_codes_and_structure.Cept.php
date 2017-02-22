@@ -1,5 +1,6 @@
 <?php
 
+use Codeception\Util\Fixtures;
 use Codeception\Util\HttpCode;
 use App\Models\Project;
 use App\Models\Task;
@@ -63,7 +64,7 @@ $requests = [];
 
 $I->comment("when we make a request that requires data (store, update) but we don't provide it");
 
-array_merge($requests, [
+$requests = array_merge($requests, [
     [ 'POST', '/api/users', [] ],
     [ 'POST', '/api/projects', [] ],
     [ 'POST', '/api/tasks', [] ],
@@ -83,45 +84,43 @@ array_merge($requests, [
 
 $I->comment("when we make a request that requires data (store, update) but we don't provide a type");
 
-$data_without_type = [
-    'data' => [
-        'attributes' => [
-            'name' => 'AAA'
-        ]
-    ]
-];
+$user_without_type = Fixtures::get('user');
+$project_without_type = Fixtures::get('project');
+$task_without_type = Fixtures::get('task');
 
-array_merge($requests, [
-    [ 'POST', '/api/users', $data_without_type ],
-    [ 'POST', '/api/projects', $data_without_type ],
-    [ 'POST', '/api/tasks', $data_without_type ],
-    [ 'PATCH', "/api/users/{$user_1_id}", $data_without_type ],
-    [ 'PATCH', "/api/projects/{$project_1_id}", $data_without_type ],
-    [ 'PATCH', "/api/tasks/{$task_1_id}", $data_without_type ],
+unset($user_without_type['data']['type']);
+unset($project_without_type['data']['type']);
+unset($task_without_type['data']['type']);
+
+$requests = array_merge($requests, [
+    [ 'POST', '/api/users', $user_without_type ],
+    [ 'POST', '/api/projects', $project_without_type ],
+    [ 'POST', '/api/tasks', $task_without_type ],
+    [ 'PATCH', "/api/users/{$user_1_id}", array_merge_recursive($user_without_type, [ 'data' => [ 'id' => $user_1_id ] ]) ],
+    [ 'PATCH', "/api/projects/{$project_1_id}", array_merge_recursive($project_without_type, [ 'data' => [ 'id' => $project_1_id ] ]) ],
+    [ 'PATCH', "/api/tasks/{$task_1_id}", array_merge_recursive($task_without_type, [ 'data' => [ 'id' => $task_1_id ] ]) ],
 ]);
 
 // ----------------------------------------------------
-// 3) Unknown type
+// 3) No id
+//
+// Specs:
+// "The PATCH request MUST include a single resource
+// object as primary data. The resource object MUST
+// contain type and id members."
+//
 // ----------------------------------------------------
 
-$I->comment("when we make a request that requires data (store, update) and provide an unknown type");
+$I->comment("when we make a request that requires data (store, update) but we don't provide a type");
 
-$data_with_wrong_type = [
-    'data' => [
-        'type' => 'unknown',
-        'attributes' => [
-            'name' => 'AAA'
-        ]
-    ]
-];
+$user_without_id = Fixtures::get('user');
+$project_without_id = Fixtures::get('project');
+$task_without_id = Fixtures::get('task');
 
-array_merge($requests, [
-    [ 'POST', '/api/users', $data_with_wrong_type ],
-    [ 'POST', '/api/projects', $data_with_wrong_type ],
-    [ 'POST', '/api/tasks', $data_with_wrong_type ],
-    [ 'PATCH', "/api/users/{$user_1_id}", $data_with_wrong_type ],
-    [ 'PATCH', "/api/projects/{$project_1_id}", $data_with_wrong_type ],
-    [ 'PATCH', "/api/tasks/{$task_1_id}", $data_with_wrong_type ],
+$requests = array_merge($requests, [
+    [ 'PATCH', "/api/users/{$user_1_id}", $user_without_id ],
+    [ 'PATCH', "/api/projects/{$project_1_id}", $project_without_id ],
+    [ 'PATCH', "/api/tasks/{$task_1_id}", $task_without_id ],
 ]);
 
 // ----------------------------------------------------

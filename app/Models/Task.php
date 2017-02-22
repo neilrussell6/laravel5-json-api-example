@@ -26,7 +26,7 @@ class Task extends Model
 
     public function editors ()
     {
-        return $this->belongsToMany('App\Models\User')->wherePivot('is_editor', true);
+        return $this->belongsToMany('App\Models\User')->withPivot('is_editor')->wherePivot('is_editor', true);
     }
 
     public function owner ()
@@ -36,7 +36,7 @@ class Task extends Model
 
     public function project ()
     {
-        return $this->belongsTo('App\Models\Project');
+        return $this->belongsTo('App\Models\Project', 'project_id');
     }
 
     public function users ()

@@ -2,6 +2,7 @@
 
 use App\Utils\JsonApiUtils;
 use Closure;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class ValidateJsonApiRequest
@@ -25,7 +26,7 @@ class ValidateJsonApiRequest
 
             $error_code = 400;
             $errors = JsonApiUtils::makeErrorObjects([[
-                'title' => "Missing request Content-Type header",
+                'title' => "Invalid request missing Content-Type header",
                 'detail' => "Clients MUST send all JSON API data in request documents with the header Content-Type: application/vnd.api+json without any media type parameters."
             ]], $error_code);
         }
@@ -54,25 +55,27 @@ class ValidateJsonApiRequest
         else if (in_array($request->method(), ['POST', 'PATCH'])) {
 
             $request_data = $request->all();
+            $error_code = 422;
 
             // validate request data : data
             if (!array_key_exists('data', $request_data)) {
 
-                $error_code = 422;
                 $errors = JsonApiUtils::makeErrorObjects([[
                     'title' => "Invalid request",
                     'detail' => "The request MUST include a single resource object as primary data."
                 ]], $error_code);
             }
 
-            // validate request data : data.type
-            else if (!array_key_exists('type', $request_data['data'])) {
+            // single resource object
+            else if (count($request_data['data']) > 0 && is_string(array_keys($request_data['data'])[0])) {
+                $errors = $this->validateRequestResourceObject($request_data['data'], $error_code, $request->method());
+            }
 
-                $error_code = 422;
-                $errors = JsonApiUtils::makeErrorObjects([[
-                    'title' => "Invalid request",
-                    'detail' => "The request resource object MUST contain at least a type member."
-                ]], $error_code);
+            // indexed array of resource objects
+            else {
+                $errors = array_reduce($request_data['data'], function ($carry, $resource_object) use ($error_code, $request) {
+                    return array_merge_recursive($carry, $this->validateRequestResourceObject($resource_object, $error_code, $request->method()));
+                }, []);
             }
         }
 
@@ -83,5 +86,34 @@ class ValidateJsonApiRequest
 
         // ...
         return $next($request);
+    }
+
+    private function validateRequestResourceObject ($resource_object, $error_code, $request_method) {
+
+        $errors = [];
+
+        // validate data.type
+        if (!array_key_exists('type', $resource_object)) {
+
+            $errors = JsonApiUtils::makeErrorObjects([[
+                'title' => "Invalid request",
+                'detail' => "The request resource object MUST contain at least a type member."
+            ]], $error_code);
+        }
+
+        // if request method requires request data
+        else if (in_array($request_method, ['PATCH'])) {
+
+            // validate data.id
+            if (!array_key_exists('id', $resource_object)) {
+
+                $errors = JsonApiUtils::makeErrorObjects([[
+                    'title' => "Invalid request",
+                    'detail' => "The request resource object for a PATCH request MUST contain an id member."
+                ]], $error_code);
+            }
+        }
+
+        return $errors;
     }
 }

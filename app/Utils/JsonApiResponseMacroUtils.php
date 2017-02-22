@@ -17,18 +17,19 @@ class JsonApiResponseMacroUtils
      * @param Collection $collection
      * @param $model
      * @param $base_url
+     * @param bool $include_resource_object_links
      * @param bool $is_minimal (restricts the results to only type & id)
      * @return array
      */
-    public static function makeCollectionResponse (Collection $collection, $model, $base_url, $is_minimal = false)
+    public static function makeCollectionResponse (Collection $collection, $model, $base_url, $include_resource_object_links = true, $is_minimal = false)
     {
         $include_relationships = false;
 
         $result = [
             'links' => JsonApiUtils::makeTopLevelLinksObject($base_url),
-            'data' => $collection->map(function($item) use ($model, $base_url, $include_relationships, $is_minimal) {
+            'data' => $collection->map(function($item) use ($model, $base_url, $include_relationships, $is_minimal, $include_resource_object_links) {
 
-                $links = JsonApiUtils::makeResourceObjectLinksObject($base_url, $item['id']);
+                $links = $include_resource_object_links ? JsonApiUtils::makeResourceObjectLinksObject($base_url, $item['id']) : null;
                 return JsonApiUtils::makeResourceObject($item->toArray(), $model, $base_url, $links, $include_relationships, $is_minimal);
             })
         ];

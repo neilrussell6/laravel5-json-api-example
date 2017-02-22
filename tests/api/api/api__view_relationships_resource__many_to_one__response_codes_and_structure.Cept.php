@@ -22,7 +22,7 @@ $I->assertSame(10, User::all()->count());
 // projects
 
 // ... owned by user 3
-$I->comment("given 5 projects owned by user 3");
+$I->comment("given 5 projects owned by user 2");
 factory(Project::class, 5)->create(['user_id' => 2]);
 
 // ... no owner

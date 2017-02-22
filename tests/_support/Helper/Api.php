@@ -22,7 +22,13 @@ class Api extends Module
                 case 'GET': $module->sendGET($request[1]); break;
                 case 'POST': $module->sendPOST($request[1], $request[2]); break;
                 case 'PATCH': $module->sendPATCH($request[1], $request[2]); break;
-                case 'DELETE': $module->sendDELETE($request[1]); break;
+                case 'DELETE':
+                    if (count($request) > 2) {
+                        $module->sendDELETE($request[1], $request[2]);
+                    } else {
+                        $module->sendDELETE($request[1]);
+                    }
+                    break;
             }
 
             $callback($request);
