@@ -1,7 +1,7 @@
-<?php namespace App\Http\Middleware;
+<?php namespace NeilRussell6\Laravel5JsonApi\Http\Middleware;
 
-use App\Utils\JsonApiUtils;
 use Closure;
+use NeilRussell6\Laravel5JsonApi\Utils\JsonApiUtils;
 
 class BuildJsonApiResponse
 {

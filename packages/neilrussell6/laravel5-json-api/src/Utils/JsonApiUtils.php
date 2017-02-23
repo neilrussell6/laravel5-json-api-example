@@ -1,7 +1,7 @@
-<?php namespace App\Utils;
+<?php namespace NeilRussell6\Laravel5JsonApi\Utils;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Class JsonApiUtils

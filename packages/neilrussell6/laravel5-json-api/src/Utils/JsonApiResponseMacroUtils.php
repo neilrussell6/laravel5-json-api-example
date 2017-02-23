@@ -1,6 +1,6 @@
-<?php namespace App\Utils;
+<?php namespace NeilRussell6\Laravel5JsonApi\Utils;
 
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**

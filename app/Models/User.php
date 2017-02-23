@@ -1,13 +1,12 @@
 <?php namespace App\Models;
 
-use App\Traits\Validatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use NeilRussell6\Laravel5JsonApi\Traits\Validatable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
-    use Validatable;
+    use Notifiable, Validatable;
 
     protected $fillable     = ['name', 'email', 'password'];
     protected $hidden       = ['password', 'remember_token'];

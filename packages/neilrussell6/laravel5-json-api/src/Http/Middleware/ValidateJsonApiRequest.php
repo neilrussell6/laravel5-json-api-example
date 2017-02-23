@@ -1,9 +1,8 @@
-<?php namespace App\Http\Middleware;
+<?php namespace NeilRussell6\Laravel5JsonApi\Http\Middleware;
 
-use App\Utils\JsonApiUtils;
 use Closure;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use NeilRussell6\Laravel5JsonApi\Utils\JsonApiUtils;
 
 class ValidateJsonApiRequest
 {

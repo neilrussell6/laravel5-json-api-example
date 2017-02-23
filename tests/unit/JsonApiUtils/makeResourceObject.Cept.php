@@ -1,9 +1,9 @@
 <?php
 
 use App\Models\User;
-use App\Utils\JsonApiUtils;
+use NeilRussell6\Laravel5JsonApi\Utils\JsonApiUtils;
 
-$I = new FunctionalTester($scenario);
+$I = new UnitTester($scenario);
 
 ///////////////////////////////////////////////////////
 //

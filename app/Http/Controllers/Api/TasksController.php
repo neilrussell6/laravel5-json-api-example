@@ -2,8 +2,6 @@
 
 use App\Http\Controllers\Controller;
 use App\Models\Task;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
 
 class TasksController extends Controller
 {

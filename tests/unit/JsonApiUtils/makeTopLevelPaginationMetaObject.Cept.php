@@ -1,9 +1,9 @@
 <?php
 
-use App\Utils\JsonApiUtils;
+use NeilRussell6\Laravel5JsonApi\Utils\JsonApiUtils;
 use Codeception\Util\Stub;
 
-$I = new FunctionalTester($scenario);
+$I = new UnitTester($scenario);
 
 ///////////////////////////////////////////////////////
 //

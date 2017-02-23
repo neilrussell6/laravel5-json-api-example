@@ -1,9 +1,9 @@
-<?php namespace App\Exceptions;
+<?php namespace NeilRussell6\Laravel5JsonApi\Exceptions;
 
-use App\Utils\JsonApiUtils;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use NeilRussell6\Laravel5JsonApi\Utils\JsonApiUtils;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 

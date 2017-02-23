@@ -1,7 +1,6 @@
 <?php
 
-use App\Utils\JsonApiUtils;
-use Codeception\Util\HttpCode;
+use NeilRussell6\Laravel5JsonApi\Utils\JsonApiUtils;
 
 $I = new UnitTester($scenario);
 

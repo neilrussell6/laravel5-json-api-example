@@ -38,7 +38,7 @@ $app->singleton(
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
-    App\Exceptions\Handler::class
+    \NeilRussell6\Laravel5JsonApi\Exceptions\Handler::class
 );
 
 /*

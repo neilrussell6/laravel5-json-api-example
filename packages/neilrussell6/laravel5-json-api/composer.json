@@ -1,0 +1,12 @@
+{
+  "name": "neilrussell6/laravel5-json-api",
+  "description": "Laravel 5 JSON API implementation",
+  "authors": [
+    {
+      "name": "Neil Russell",
+      "email": "neilrussell6@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {}
+}

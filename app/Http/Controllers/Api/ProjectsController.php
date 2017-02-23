@@ -2,10 +2,9 @@
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
-use App\Models\Task;
-use App\Utils\JsonApiUtils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use NeilRussell6\Laravel5JsonApi\Utils\JsonApiUtils;
 
 class ProjectsController extends Controller
 {
@@ -57,7 +56,7 @@ class ProjectsController extends Controller
         // respond with error
         if (!empty($request_data_validation['errors'])) {
             $predominant_error_code = JsonApiUtils::getPredominantErrorStatusCode($request_data_validation['error_code'], 422);
-            return response([ 'errors' => $request_data_validation['errors'] ], $predominant_error_code);
+            return Response::make([ 'errors' => $request_data_validation['errors'] ], $predominant_error_code);
         }
 
         // map through each of the project's existing tasks that are not included in request and dissociate with project
@@ -73,7 +72,7 @@ class ProjectsController extends Controller
         }, $task_ids_to_dissociate);
 
         if (in_array(false, $results)) {
-            return response([ 'errors' => [ "Could not update related resource" ] ], 500 );
+            return Response::make([ 'errors' => [ "Could not update related resource" ] ], 500 );
         }
 
         // map through each task id and associate with project
@@ -84,10 +83,10 @@ class ProjectsController extends Controller
         }, array_column($request_data['data'], 'id'));
 
         if (in_array(false, $results)) {
-            return response([ 'errors' => [ "Could not update related resource" ] ], 500 );
+            return Response::make([ 'errors' => [ "Could not update related resource" ] ], 500 );
         }
 
         // return no content
-        return response([], 204);
+        return Response::make([], 204);
     }
 }

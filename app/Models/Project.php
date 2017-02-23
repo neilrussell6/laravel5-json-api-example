@@ -1,7 +1,7 @@
 <?php namespace App\Models;
 
-use App\Traits\Validatable;
 use Illuminate\Database\Eloquent\Model;
+use NeilRussell6\Laravel5JsonApi\Traits\Validatable;
 
 class Project extends Model
 {

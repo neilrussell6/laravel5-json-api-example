@@ -1,4 +1,4 @@
-<?php namespace App\Traits;
+<?php namespace NeilRussell6\Laravel5JsonApi\Traits;
 
 trait Validatable {
 
