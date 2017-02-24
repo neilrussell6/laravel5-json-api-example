@@ -1,7 +1,7 @@
-Laravel 5 JSON API
-==================
+Laravel 5 JSON API Example
+==========================
 
-Laravel 5 JSON API implementation.
+Laravel 5 JSON API example implementation.
 
 Response format:
 
@@ -110,7 +110,9 @@ $ cc run
 
 ## Road Map
 
-* update or create relationships through the relationships object in a request like this:
+#### JSON API
+
+* Add support to update or create relationships through the relationships object in a request like this:
   UPDATE /articles/1
   {
     "data": [
@@ -120,7 +122,7 @@ $ cc run
       }
     }
   }  
-* Add Pagination for related resources
-* Add support for inclusion of related resources
+* Add support for paginating related resources
+* Add support for include queries
 * Add support for sorting
 * Add support for filtering
