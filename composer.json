@@ -1,11 +1,12 @@
 {
     "name": "neilrussell6/laravel5-json-api-example",
-    "description": "Laravel 5 JSON API implementation",
+    "description": "Laravel 5 JSON API example implementation",
+    "version": "0.0.1",
     "keywords": [
-      "laravel rest api",
-      "laravel json api",
-      "laravel jsonapi",
-      "jsonapi"
+        "laravel rest api",
+        "laravel json api",
+        "laravel jsonapi",
+        "jsonapi"
     ],
     "license": "MIT",
     "type": "project",
