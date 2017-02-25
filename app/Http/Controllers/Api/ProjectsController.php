@@ -4,7 +4,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-use NeilRussell6\Laravel5JsonApi\Utils\JsonApiUtils;
+use Neilrussell6\Laravel5JsonApi\Facades\JsonApiUtils;
 
 class ProjectsController extends Controller
 {

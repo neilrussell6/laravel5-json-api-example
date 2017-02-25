@@ -176,7 +176,7 @@ return [
         /*
          * Custom Packages Service Providers...
          */
-        NeilRussell6\Laravel5JsonApi\Providers\Laravel5JsonApiServiceProvider::class,
+        Neilrussell6\Laravel5JsonApi\Providers\Laravel5JsonApiServiceProvider::class
     ],
 
     /*
@@ -222,6 +222,10 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        /*
+         * Custom Facades...
+         */
+        'JsonApiUtils' => \Neilrussell6\Laravel5JsonApi\Facades\JsonApiUtils::class
     ],
 
 ];

@@ -4,6 +4,5 @@ use Codeception\Module;
 
 class Unit extends Module
 {
-    use CommonJsonPath;
-    use CommonCollection;
+    use CommonJsonPath, CommonCollection;
 }

@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use NeilRussell6\Laravel5JsonApi\Http\Controllers\JsonApiController;
+use Neilrussell6\Laravel5JsonApi\Http\Controllers\JsonApiController;
 
 class Controller extends JsonApiController
 {

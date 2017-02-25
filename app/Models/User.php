@@ -2,7 +2,7 @@
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use NeilRussell6\Laravel5JsonApi\Traits\Validatable;
+use Neilrussell6\Laravel5JsonApi\Traits\Validatable;
 
 class User extends Authenticatable
 {
