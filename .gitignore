@@ -1,8 +1,13 @@
+# codeception
+tests/_output/*
+tests/_support/_generated
+tests/api.suite.yml
+tests/acceptance.suite.yml
+storage/*.sqlite
+storage/*.sqlite-journal
+
 # IDE
 /.idea
-
-# package managers
-/vendor
 
 # laravel
 /public/storage
@@ -13,13 +18,8 @@ Homestead.yaml
 .env
 .env.testing
 
-# codeception
-tests/_output/*
-tests/_support/_generated
-tests/api.suite.yml
-tests/acceptance.suite.yml
-storage/*.sqlite
-storage/*.sqlite-journal
-
 # misc
 _ignore
+
+# package managers
+/vendor

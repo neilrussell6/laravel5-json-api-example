@@ -3,6 +3,7 @@
   "description": "Laravel 5 JSON API example implementation",
   "version": "0.0.1",
   "keywords": [
+    "laravel",
     "laravel rest api",
     "laravel json api",
     "laravel jsonapi",

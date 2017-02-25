@@ -12,7 +12,8 @@ Uses:
 * [Laravel 5](https://laravel.com/docs/5.3)
 * [Codeception](http://codeception.com/)
 
-## Installation
+Installation
+------------
 
 ```bash
 $ composer install
@@ -22,6 +23,12 @@ $ cp .env.example .env
 
 Fill in `.env` file
 
-## Usage
+Usage
+-----
 
 see **Manual Testing** section in **vendor/neilrussell6/laravel5-json-api/readme.md
+
+License
+-------
+
+[MIT](https://github.com/neilrussell6/markdown-it-code-embed/blob/master/LICENSE)
